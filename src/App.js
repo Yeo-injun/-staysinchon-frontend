@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import {useEffect, useState} from "react";
+import {ApiGet, bsApi} from "./Api";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+
+    const [data, setData] = useState();
+
+    const getRoomList = async () => {
+
+        const resultData = await bsApi.get('/roomlist');
+        setData(resultData.data);
+        console.log(resultData.data,'????');
+    }
+
+    useEffect(() => {
+        getRoomList();
+    }, [])
+
+
+    return (
+        <>
+            <div>
+                {data.map((value,index) => {
+                    return <>
+                        <div>{index + 1}번째 데이터</div>
+                        <div>bathroom :{value.bathroom}</div>
+                        <div>bed :{value.bed}</div>
+                        <div>price_day :{value.price_day}</div>
+                        <div>price_month :{value.price_month}</div>
+                        <div>room_ID :{value.room_ID}</div>
+                        <div>room_img :{value.room_img}</div>
+                        <div>room_type :{value.room_type}</div>
+                        <br/>
+                        <br/>
+                    </>
+                })}
+            </div>
+        </>
+    );
 }
 
 export default App;
