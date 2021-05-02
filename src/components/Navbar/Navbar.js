@@ -4,6 +4,7 @@ import {IconContext} from 'react-icons/lib'
 import Signup from '../../components/Form/Signup'
 import { Modal } from 'antd';
 import {Button} from '../../globalStyles';
+import axios from 'axios';
 import {
     Nav,
     NavbarContainer,
@@ -76,7 +77,13 @@ const Navbar = () => {
                         
                         {/* 예약하기 */}
                         <NavItem>
-                            <NavLinks to ='/reservation'>Reservation</NavLinks>
+                            <NavLinks to ='/reservation' onClick={()=>{
+                                axios.get('http://localhost:8080/rooms')
+                                    .then((result)=>{console.log(result.data)})
+                                    .catch((result)=>{console.log("먼가 이상")})
+
+
+                            }} >Reservation</NavLinks>
                         </NavItem>
                         {/* 마이페이지 */}
                         <NavItem>
@@ -89,8 +96,12 @@ const Navbar = () => {
                             <Button primary onClick={showModal}>
                             SIGN UP
                             </Button>
-                            <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                               
+                            <Modal title="Login" 
+                            visible={isModalVisible} 
+                            onOk={handleOk} 
+                            onCancel={handleCancel}
+                            footer={null}>
+                             <Signup/>
                             </Modal>
                             </NavBtnLink>
                                 

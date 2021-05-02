@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
-const Signup = () => {
-    const onFinish = (values) => {
+function Signup() {
+  function onFinish(values) {
     console.log('Received values of form: ', values);
+  }
+  let [user_ID, setUserName] = useState('');
+  let [pwd, setUserPassword] = useState('');
 
-    return (
-        <Form
+  return (
+    <Form
         name="normal_login"
         className="login-form"
         initialValues={{
@@ -25,7 +28,9 @@ const Signup = () => {
             },
           ]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          <Input id="hi" prefix={<UserOutlined className="site-form-item-icon" />} 
+          placeholder="Username" 
+          onChange={(e)=>{ setUserName(e.target.value) }} />
         </Form.Item>
         <Form.Item
           name="password"
@@ -37,11 +42,14 @@ const Signup = () => {
           ]}
         >
           <Input
+            className='userInput'
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="Password"
+            onChange={(e)=>{ setUserPassword(e.target.value) }}
           />
         </Form.Item>
+        {console.log(user_ID, pwd)}
         <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
@@ -59,10 +67,8 @@ const Signup = () => {
           Or <a href="">register now!</a>
         </Form.Item>
       </Form>
-    );
-  };
-  
-    
-}
 
-export default Signup
+  )
+
+}
+export default Signup;

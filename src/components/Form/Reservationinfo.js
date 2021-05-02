@@ -91,7 +91,7 @@ const Reservationinfo = () => {
       onFinish={onFinish}
       scrollToFirstError
     >
-        <Form.Item
+        {/* <Form.Item
             name="email"
             label="E-mail"
             rules={[
@@ -106,7 +106,7 @@ const Reservationinfo = () => {
             ]}
         >
            <Input />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
             name="Firstname"
