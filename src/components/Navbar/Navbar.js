@@ -77,14 +77,9 @@ const Navbar = () => {
                         
                         {/* 예약하기 */}
                         <NavItem>
-                            <NavLinks to ='/reservation' onClick={()=>{
-                                axios.get('http://localhost:8080/rooms')
-                                    .then((result)=>{console.log(result.data)})
-                                    .catch((result)=>{console.log("먼가 이상")})
-
-
-                            }} >Reservation</NavLinks>
+                            <NavLinks to ='/reservation'>Reservation</NavLinks>
                         </NavItem>
+
                         {/* 마이페이지 */}
                         <NavItem>
                             <NavLinks to ='/mypage'>mypage</NavLinks>
