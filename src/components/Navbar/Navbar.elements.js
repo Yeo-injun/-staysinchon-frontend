@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import styled from 'styled-components';
 import {FaMagento} from 'react-icons/fa';
 import { Link } from 'react-router-dom';

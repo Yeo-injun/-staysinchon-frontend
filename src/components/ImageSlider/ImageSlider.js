@@ -14,20 +14,20 @@ function ImageSlider() {
 
     return (
         <>
-            <Carousel autoplay>
-    <div>
-      <img src = {'../../images/house.jpg'} style={contentStyle} alt='image' className='image' />
-    </div>
-    <div>
-      <h3 style={contentStyle}>2</h3>
-    </div>
-    <div>
-      <h3 style={contentStyle}>3</h3>
-    </div>
-    <div>
-      <h3 style={contentStyle}>4</h3>
-    </div>
-  </Carousel>,
+        <Carousel autoplay>
+        <div>
+          <img src = {'../../images/house.jpg'} style={contentStyle} alt='image' className='image' />
+        </div>
+        <div>
+          <h3 style={contentStyle}>2</h3>
+        </div>
+        <div>
+          <h3 style={contentStyle}>3</h3>
+        </div>
+        <div>
+          <h3 style={contentStyle}>4</h3>
+        </div>
+        </Carousel>
         </>
     )
 }
