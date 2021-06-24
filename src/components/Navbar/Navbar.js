@@ -26,29 +26,10 @@ const Navbar = () => {
     const [click, setClick] = useState(false);
     const [button, setButton] = useState(true);
     let [isModalVisible, setIsModalVisible] = useState(false); // Modal 상태
+    let [ isLogin, setIsLogin ] = useState(false);
     /************** useState영역 [끝] **************/ 
     
-
-    const handleClick = () => setClick(!click)
-
-    const showButton = () => {
-        if(window.innerwidth <= 960) {
-            setButton(false)
-        } else {
-            setButton(true)
-        }
-    }
-
-    /************** useEffect 영역 ************************/ 
-    useEffect(() => {
-        showButton()
-    }, []);
-    /************** useEffect 영역 [끝] *******************/ 
-
-    window.addEventListener('resize', showButton);
-
-    
-    
+    const handleClick = () => setClick(!click);  // 기본값이 false
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -61,6 +42,41 @@ const Navbar = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    const showButton = () => {
+        if(window.innerwidth <= 960) {
+            setButton(false)
+        } else {
+            setButton(true)
+        }
+    }
+    
+    // 로그인 여부 확인
+    const checkLogin = () => {
+        let authToken = localStorage.getItem('authToken');
+        if (authToken != null && authToken != '') {
+            setIsLogin(true);
+        }
+    }
+
+    // 로그아웃 요청
+    const callLogout = () => {
+        alert("로그아웃 요청을 매핑시켜주세요!");
+    }
+    
+
+    /************** useEffect 영역 ************************/ 
+    useEffect(() => {
+        showButton();
+        checkLogin();
+    }, []);
+    /************** useEffect 영역 [끝] *******************/ 
+
+    window.addEventListener('resize', showButton);
+
+
+
+
   
     /************** HTML 화면 영역 **************/ 
     return (
@@ -98,20 +114,23 @@ const Navbar = () => {
                         
                         <NavItemBtn>
                             <NavBtnLink>
-                            {/* 로그인 버튼 */}
-                            <Button primary onClick={ showModal }>
+                            {/* 로그인 버튼 : 로그인시 사라짐*/}
+                            { !isLogin && <Button primary onClick={ showModal }>         
                             SIGN UP
-                            </Button>
+                            </Button> }
+
+                            {/* 로그아웃 버튼 : 로그인시 나타남*/}
+                            { isLogin && <Button onClick={ callLogout }>Log Out</Button>}
 
                             {/* 로그인 입력 Modal 팝업 */}
                             <Modal 
-                                title="Login" 
+                                title="Login Form" 
                                 visible={isModalVisible} 
                                 onOk={handleOk} 
                                 onCancel={handleCancel}
                                 footer={null}>
                                 {/* 로그인 완료시 모달을 종료하기 위해 props넘기기 */}
-                                <Signup setIsModalVisible={setIsModalVisible}/>
+                                <Signup setIsModalVisible={setIsModalVisible} click={click}/>
                             </Modal>
                             </NavBtnLink>
                         </NavItemBtn>
