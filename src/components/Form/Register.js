@@ -12,11 +12,46 @@ function Register() {
     let [ checkPwd, setCheckPassword ] = useState(''); // 사용자 PW 확인
     let [ email, setEmail ] = useState(''); // 사용자 email
 
+    let [ isDuplicate, setIsDuplicate ] = useState(true); // 아이디 중복체크
+
     let [ authToken, setAuthToken ] = useState(null); // login Token
     /************** useState영역 [끝] **************/ 
 
-    /* @@ 아이디 중복 확인 */
+    /************** 변수 영역 *******************/
+    const inputRef = React.useRef(null); // // ref를 위한 변수 선언
+    /************** 변수 영역 [끝] *******************/
 
+
+    /* @@ 아이디 중복 확인 */
+    function idCheck() {
+        console.log(user_ID);
+        // 호출 URL : 추가 설계필요
+        const url = "http://localhost:8080/user/check";
+        
+        // post 데이터
+        const data = {
+          user_ID : user_ID
+        };
+        
+        // axios POST 요청         
+        axios.post(url, data)
+            .then(function (response) {
+                let res = response.data;                            
+                console.log(res);
+                if(res === 'false') {
+                    setIsDuplicate(false);
+                }         
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert("Error!!");
+            }); // axios [끝]
+
+        alert("아이디 중복 확인을 합니다.");
+        return isDuplicate;
+    }
+    
+    
     /* 비밀번호 확인 */
     function isSamePassword() {
         if ( pwd === checkPwd ) {
@@ -27,7 +62,13 @@ function Register() {
 
     /* 회원가입 요청 */
     function tryRegister() {
-        console.log(user_ID);
+        // 아이디 중복 Check : true면 아이디 중복이 있다는 것
+        if (idCheck()){
+            alert("이미 존재하는 아이디 입니다.");
+            inputRef.current.focus();
+            return;
+        };
+
         // 호출 URL
         const url = "http://localhost:8080/user/register";
         
@@ -78,7 +119,9 @@ function Register() {
                     },
                 ]}
                 >
-                    <Input id="hi" prefix={<UserOutlined className="site-form-item-icon" />} 
+                    <Input id="hi" 
+                    ref = {inputRef}
+                    prefix={<UserOutlined className="site-form-item-icon" />} 
                     placeholder="Username" 
                     onChange={(e)=>{ setUserName(e.target.value) }} />
                 </Form.Item>
