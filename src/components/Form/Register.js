@@ -4,13 +4,19 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
+/*
+* 회원가입 완료시 화면 전환 >> 홈화면으로 이동 - 로그인을 위한 모달창 팝업 (구현 요망)
+*
+*/ 
+
+
 function Register() {
 
     /************** useState영역 *******************/ 
-    let [ user_ID, setUserName ] = useState(''); // 사용자 ID
-    let [ pwd, setPassword ] = useState(''); // 사용자 PW
-    let [ checkPwd, setCheckPassword ] = useState(''); // 사용자 PW 확인
-    let [ email, setEmail ] = useState(''); // 사용자 email
+    let [ user_ID, setUserName ] = useState(null); // 사용자 ID
+    let [ pwd, setPassword ] = useState(null); // 사용자 PW
+    let [ checkPwd, setCheckPassword ] = useState(null); // 사용자 PW 확인
+    let [ email, setEmail ] = useState(null); // 사용자 email
 
     let [ isDuplicate, setIsDuplicate ] = useState(true); // 아이디 중복체크
 
@@ -22,7 +28,7 @@ function Register() {
     /************** 변수 영역 [끝] *******************/
 
 
-    /* @@ 아이디 중복 확인 */
+    /* 아이디 중복 확인 */
     function idCheck() {
         console.log(user_ID);
         // 호출 URL : 추가 설계필요
@@ -33,22 +39,25 @@ function Register() {
           user_ID : user_ID
         };
         
+        console.log("아이디 중복 POST시작");
         // axios POST 요청         
         axios.post(url, data)
             .then(function (response) {
-                let res = response.data;                            
+                let res = response.data; 
                 console.log(res);
-                if(res === 'false') {
-                    setIsDuplicate(false);
-                }         
+                if(res === 'false') { // 중복된 ID가 없으면 false
+                    console.log("ID 체크 false");
+                    return false;
+                }
+
+                if(res === 'true') { // 중복된 ID가 있으면 true
+                    console.log("ID 체크 true");
+                    return true;
+                }
             })
             .catch(function (error) {
-                console.log(error);
-                alert("Error!!");
             }); // axios [끝]
-
-        alert("아이디 중복 확인을 합니다.");
-        return isDuplicate;
+        console.log("아이디 중복 IF문 시작");
     }
     
     
@@ -60,10 +69,33 @@ function Register() {
         return false;
     }
 
-    /* 회원가입 요청 */
+    /* 입력값 유효성 확인 */
+    function validationCheck() {
+        if (user_ID === null || user_ID === '') {
+            return false;
+        }
+        if (pwd === null || pwd === '') {
+            return false;
+        }
+        if (email === null || email === '') {
+            return false;
+        }
+        return true;
+    }
+
+    /* 회원가입 요청 : 이메일 중복 여부 체크 및 이메일 인증 기능 구현 필요 (추후 작업 요망)*/
     function tryRegister() {
+        // 입력값 유효성 검증
+        console.log("1. 입력값 유효성 검증 - 시작");
+        if (!validationCheck()) {
+            console.log("입력값 유효성 검증 - False!!!");
+            return;
+        }
+
+        console.log("2. 아이디 중복체크");
         // 아이디 중복 Check : true면 아이디 중복이 있다는 것
         if (idCheck()){
+            console.log("2-1 아이디 중복체크");
             alert("이미 존재하는 아이디 입니다.");
             inputRef.current.focus();
             return;
@@ -88,15 +120,15 @@ function Register() {
         if( isSamePassword() ){
             axios.post(url, data)
                 .then(function (response) {            
-                    console.log(response.data);    
+                    console.log(response.data);
                 })
                 .catch(function (error) {
                     alert("Error!!");
                     console.log(error);
                 }); // axios [끝]
-            return;        
+            return; // 비밀번호가 같으면 아래 alert창 실행되지 않음   
         } 
-        alert("비밀번호를 확인해주세요!");
+        alert("비밀번호가 일치하지 않습니다!");
     }
 
     /************** HTML 화면 영역 **************/ 
