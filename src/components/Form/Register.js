@@ -2,7 +2,11 @@ import React, {useState} from 'react';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+
+import './Form.css'; // css 적용
+
 import axios from 'axios';
+import { PinDropSharp } from '@material-ui/icons';
 
 /*
 * 회원가입 완료시 화면 전환 >> 홈화면으로 이동 - 로그인을 위한 모달창 팝업 (구현 요망)
@@ -10,7 +14,7 @@ import axios from 'axios';
 */ 
 
 
-function Register() {
+function Register(props) {
 
     /************** useState영역 *******************/ 
     let [ user_ID, setUserName ] = useState(null); // 사용자 ID
@@ -21,6 +25,8 @@ function Register() {
     let [ isDuplicate, setIsDuplicate ] = useState(true); // 아이디 중복체크
 
     let [ authToken, setAuthToken ] = useState(null); // login Token
+
+    let [ isRegisterSuccess, setIsRegisterSuccess ] = useState(false); // 회원가입 성공시 1. home화면으로 이동 2. 로그인 모달창 띄우기
     /************** useState영역 [끝] **************/ 
 
     /************** 변수 영역 *******************/
@@ -86,13 +92,13 @@ function Register() {
     /* 회원가입 요청 : 이메일 중복 여부 체크 및 이메일 인증 기능 구현 필요 (추후 작업 요망)*/
     function tryRegister() {
         // 입력값 유효성 검증
-        console.log("1. 입력값 유효성 검증 - 시작");
+        // alert("1. 입력값 유효성 검증 - 시작");
         if (!validationCheck()) {
             console.log("입력값 유효성 검증 - False!!!");
             return;
         }
 
-        console.log("2. 아이디 중복체크");
+        // alert("2. 아이디 중복체크");
         // 아이디 중복 Check : true면 아이디 중복이 있다는 것
         if (idCheck()){
             console.log("2-1 아이디 중복체크");
@@ -121,6 +127,7 @@ function Register() {
             axios.post(url, data)
                 .then(function (response) {            
                     console.log(response.data);
+                    setIsRegisterSuccess(true); // 1.home화면 이동 > 2. 로그인 모달창 띄우기
                 })
                 .catch(function (error) {
                     alert("Error!!");
@@ -133,9 +140,9 @@ function Register() {
 
     /************** HTML 화면 영역 **************/ 
     return (
-        <>
-            <h2>회원가입페이지</h2>
-
+        <div className="register-form">
+            <h2>Register Form</h2>
+            <h2>{props.test}</h2> 
             <Form
                 name="normal_login"
                 className="login-form"
@@ -213,13 +220,13 @@ function Register() {
 
                 
                 {/* 회원가입 버튼 */}
-                <Form.Item>
+                <Form.Item className="register-btn">
                     <Button onClick={ tryRegister } type="primary" htmlType="submit" className="login-form-button">
-                        Register
+                        Join Us!
                     </Button>
                 </Form.Item>
             </Form>
-        </>
+        </div>
     )
 }
 

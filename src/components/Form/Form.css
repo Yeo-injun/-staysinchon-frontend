@@ -1,0 +1,17 @@
+/* Signup.js */
+.login-form-button {
+    margin-right: 10px;
+}
+
+/* Register.js */
+.register-form {
+    align-items: center;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1%;
+}
+
+.register-btn {
+    float: right;
+    margin-right: 1%;
+}
