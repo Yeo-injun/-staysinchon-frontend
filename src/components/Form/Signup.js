@@ -13,6 +13,7 @@ function Signup(props) {
   let [ user_ID, setUserName ] = useState(''); // 사용자 ID
   let [ pwd, setUserPassword ] = useState(''); // 사용자 PW
   let [ authToken, setAuthToken ] = useState(null); // login Token
+
   /************** useState영역 [끝] **************/ 
   
   /* onFinish() */
