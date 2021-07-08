@@ -7,23 +7,48 @@ import { Route, Link } from 'react-router-dom';
 import Register from './Register';
 import axios from 'axios';
 
+import { useHistory } from 'react-router'; // 특정경로로 이동시키기 위한 함수
+
+
 function Signup(props) {
 
   /************** useState영역 *******************/ 
   let [ user_ID, setUserName ] = useState(''); // 사용자 ID
   let [ pwd, setUserPassword ] = useState(''); // 사용자 PW
   let [ authToken, setAuthToken ] = useState(null); // login Token
-
   /************** useState영역 [끝] **************/ 
+  
+  /************** 변수 영역 *******************/
+  let history = useHistory();
+  /************** 변수 영역 [끝] *******************/
   
   /* onFinish() */
   function onFinish(values) {
     console.log('Received values of form: ', values);
   } // onFinish()
 
+  /* 유효성 검증 */
+  function isValidate() {
+    if (user_ID === null || user_ID === '') {
+      return false;
+    }
+
+    if (pwd === null || pwd === '') {
+      return false;
+    }
+
+    return true;
+  }
+
 
   /* 로그인 요청 */
   function tryLogin() {
+    // 입력값 유효성 체크
+    if (!isValidate()) {
+      alert("아이디와 비밀번호를 입력해주세요");
+      return;
+    }
+
     console.log(user_ID);
     // 호출 URL
     const url = "http://localhost:8080/login";
@@ -43,10 +68,10 @@ function Signup(props) {
     axios.post(url, data, header)
       .then(function (response) {
         setAuthToken(response.headers.authorization); // authToken 보관   
-        
         // 로그인이 처리 여부 확인 : 정상처리시 모달창 종료(부모 컴포넌트에서 모달 조작 useState값 조작)
         if(authToken != null && authToken != ''){
           localStorage.setItem('authToken', authToken); // axios.defaults.headers.common['Authorization'] = authToken; // Request시 header값 초기화
+          history.push('/'); // 회원가입 완료되면 home화면 이동 
           props.setIsModalVisible(false); // 부모 컴포넌트 함수 호출 : 모달창 끄기          
         } else {
           alert("아이디 혹은 비밀번호를 확인해주세요.");

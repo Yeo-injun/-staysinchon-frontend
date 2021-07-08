@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router'; // 특정경로로 이동시키기 위한 함수
+
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -25,29 +27,22 @@ function Register(props) {
     let [ isDuplicate, setIsDuplicate ] = useState(true); // 아이디 중복체크
 
     let [ authToken, setAuthToken ] = useState(null); // login Token
-
-    let [ isRegisterSuccess, setIsRegisterSuccess ] = useState(false); // 회원가입 성공시 1. home화면으로 이동 2. 로그인 모달창 띄우기
     /************** useState영역 [끝] **************/ 
 
     /************** 변수 영역 *******************/
     const inputRef = React.useRef(null); // // ref를 위한 변수 선언
+    let history = useHistory();
     /************** 변수 영역 [끝] *******************/
 
 
     /* 아이디 중복 확인 */
     function idCheck() {
-        console.log(user_ID);
-        // 호출 URL : 추가 설계필요
-        const url = "http://localhost:8080/user/check";
-        
-        // post 데이터
-        const data = {
-          user_ID : user_ID
-        };
-        
         console.log("아이디 중복 POST시작");
         // axios POST 요청         
-        axios.post(url, data)
+        axios.post
+            ( "http://localhost:8080/user/check"
+            , { user_ID : user_ID }
+            )
             .then(function (response) {
                 let res = response.data; 
                 console.log(res);
@@ -92,42 +87,31 @@ function Register(props) {
     /* 회원가입 요청 : 이메일 중복 여부 체크 및 이메일 인증 기능 구현 필요 (추후 작업 요망)*/
     function tryRegister() {
         // 입력값 유효성 검증
-        // alert("1. 입력값 유효성 검증 - 시작");
         if (!validationCheck()) {
             console.log("입력값 유효성 검증 - False!!!");
             return;
         }
 
-        // alert("2. 아이디 중복체크");
         // 아이디 중복 Check : true면 아이디 중복이 있다는 것
         if (idCheck()){
-            console.log("2-1 아이디 중복체크");
             alert("이미 존재하는 아이디 입니다.");
             inputRef.current.focus();
             return;
         };
-
-        // 호출 URL
-        const url = "http://localhost:8080/user/register";
-        
-        // post 데이터
-        const data = {
-          user_ID : user_ID,
-          pwd : pwd,
-          email : email
-        };
     
-        // header 설정
-        const header =  { 
-          'Access-Control-Allow-Origin' : ''
-        };
-        
         // 비밀번호가 같을 경우 axios POST 요청 
         if( isSamePassword() ){
-            axios.post(url, data)
+            axios.post
+                ( "http://localhost:8080/user/register"
+                , {
+                    user_ID : user_ID,
+                    pwd : pwd,
+                    email : email
+                  })
                 .then(function (response) {            
                     console.log(response.data);
-                    setIsRegisterSuccess(true); // 1.home화면 이동 > 2. 로그인 모달창 띄우기
+                    alert("회원가입이 완료되었습니다!");
+                    history.push('/'); // 회원가입 완료되면 home화면 이동 
                 })
                 .catch(function (error) {
                     alert("Error!!");
@@ -137,6 +121,7 @@ function Register(props) {
         } 
         alert("비밀번호가 일치하지 않습니다!");
     }
+
 
     /************** HTML 화면 영역 **************/ 
     return (
