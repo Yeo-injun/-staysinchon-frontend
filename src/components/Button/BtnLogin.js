@@ -48,16 +48,15 @@ function BtnLogin(props) {
   useEffect(() => {
     if (props.authToken != null) {
       setIsLogin(true);
-      alert("렌더링 확인!" + isLogin);
+    } else {
+      setIsLogin(false);
     }
-
-  }, [isLogin]);
-  /************** useEffect 영역 [끝] *******************/ 
+  }); // 로그인 상태를 확인하여 rendering을 진행해야 하기 때문에 2번째 인자값 제거  /************** useEffect 영역 [끝] *******************/ 
 
 
   /************** HTML 화면 영역 **************/ 
 
-  if (props.isLogin) {
+  if (isLogin) {
   /* 로그인 상태 : LOG OUT버튼 노출 */
     return <Button onClick={ tryLogout }>LOG OUT</Button>;
   } 
@@ -65,7 +64,7 @@ function BtnLogin(props) {
   /* 비로그인 상태 : LOG IN버튼 노출 */
   return (
   <>
-  <Button onClick={ showModal }>SIGN UP</Button>
+  <Button onClick={ showModal }>LOG IN</Button>
 
   {/* 로그인 Modal 팝업 */}
   <Modal 

@@ -46,18 +46,21 @@ const Navbar = () => {
         }
     }
     
-    // 로그인 여부 확인
+    // 로그인 여부 확인 : 각각의 상황에 맞춰 값을 할당
     function checkLogin() {
         let token = localStorage.getItem('authToken');
-        setAuthToken(token);
-        alert('1번째 : ' + token);
+        if (token == null) {
+            setAuthToken(null);
+        } else {
+            setAuthToken(token);
+        }
     }
 
     /************** useEffect 영역 ************************/ 
     useEffect(() => {
         showButton();
         checkLogin();
-    }, [authToken]);
+    }); // 로그인 상태를 확인하여 rendering을 진행해야 하기 때문에 2번째 인자값 제거
     /************** useEffect 영역 [끝] *******************/ 
 
     window.addEventListener('resize', showButton);
