@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import 'antd/dist/antd.css';
 import './Form.css'; // css 적용
 import { Form, Input, Button, Checkbox } from 'antd';
@@ -12,15 +12,29 @@ import { useHistory } from 'react-router'; // 특정경로로 이동시키기 �
 
 function Signup(props) {
 
+  /************** 전역 변수 영역 *******************/
+  let history = useHistory();
+  /************** 변수 영역 [끝] *******************/
+
   /************** useState영역 *******************/ 
   let [ user_ID, setUserName ] = useState(''); // 사용자 ID
   let [ pwd, setUserPassword ] = useState(''); // 사용자 PW
   let [ authToken, setAuthToken ] = useState(null); // login Token
   /************** useState영역 [끝] **************/ 
   
-  /************** 변수 영역 *******************/
-  let history = useHistory();
-  /************** 변수 영역 [끝] *******************/
+  /************** useEffect 영역 ************************/ 
+  useEffect(() => {
+    // 로그인 요청 후 authToken useState값이 변할때만 useEffect()가 호출됨
+    // Token이 정상 발급되면 모달창 종료(부모 컴포넌트에서 모달 조작 useState값 조작)
+    if(authToken != null && authToken != ''){
+      localStorage.setItem('authToken', authToken); // axios.defaults.headers.common['Authorization'] = authToken; // Request시 header값 초기화
+      props.setIsModalVisible(false); // 부모 컴포넌트 함수 호출 : 모달창 끄기          
+      props.setIsLogin(true); // 로그인 버튼 조작을 위해 useState함수를 넘겨받음.
+      history.push('/'); // 로그인 완료되면 home화면 이동 
+    } 
+  }, [authToken]); 
+  /************** useEffect 영역 [끝] *******************/ 
+
   
   /* onFinish() */
   function onFinish(values) {
@@ -43,9 +57,14 @@ function Signup(props) {
 
   /* 로그인 요청 */
   function tryLogin() {
+    // 로컬변수 
+    let rsAuth = null;
+
+    alert("1. 로그인 시도");
+    
     // 입력값 유효성 체크
     if (!isValidate()) {
-      alert("아이디와 비밀번호를 입력해주세요");
+      alert("Please input your ID or password");
       return;
     }
 
@@ -67,16 +86,15 @@ function Signup(props) {
     // axios POST 요청
     axios.post(url, data, header)
       .then(function (response) {
-        setAuthToken(response.headers.authorization); // authToken 보관   
-        // 로그인이 처리 여부 확인 : 정상처리시 모달창 종료(부모 컴포넌트에서 모달 조작 useState값 조작)
-        if(authToken != null && authToken != ''){
-          localStorage.setItem('authToken', authToken); // axios.defaults.headers.common['Authorization'] = authToken; // Request시 header값 초기화
-          history.push('/'); // 회원가입 완료되면 home화면 이동 
-          props.setIsModalVisible(false); // 부모 컴포넌트 함수 호출 : 모달창 끄기          
-        } else {
-          alert("아이디 혹은 비밀번호를 확인해주세요.");
+        rsAuth = response.headers.authorization;
+        setAuthToken(rsAuth); // authToken 보관
+        
+        // ID-Password가 맞지 않을 경우 Token은 undefined 반환
+        if (rsAuth == undefined){
+          alert("Please Check your ID or Password being correct");
         }
 
+        alert("통신 정상 종료");
       })
       .catch(function (error) {
         console.log(error);
@@ -87,6 +105,7 @@ function Signup(props) {
   function moveToRegister() {
     props.setIsModalVisible(false);
   }
+
 
   /************** HTML 화면 영역 **************/ 
   return (
@@ -145,7 +164,7 @@ function Signup(props) {
         
         <Form.Item>
           {/* 로그인 버튼 */}
-          <Button onClick={ tryLogin } type="primary" htmlType="submit" className="login-form-button">
+          <Button onClick={ tryLogin } click={props.click} type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>
           {/* 회원가입 버튼 : 부모 컴포넌트 UserPages에서 Routes 등록이 되어야 함*/}

@@ -15,9 +15,17 @@ function BtnLogin(props) {
     /************** useState영역 *******************/ 
     const [click, setClick] = useState(false);
     const [button, setButton] = useState(true);
-    let [isModalVisible, setIsModalVisible] = useState(false); // Modal 상태
+    let [ isModalVisible, setIsModalVisible ] = useState(false); // Modal 상태
     let [ isLogin, setIsLogin ] = useState(false); // 기본값 : 회원정보 없는 상태
     /************** useState영역 [끝] **************/ 
+
+    /************** useEffect 영역 ************************/ 
+    // 로그인 상태에 따라 버튼을 달리 보여줘야 하기 때문에
+    // 로그인 상태체크를 BtnLogin 컴포넌트에서 실행
+    useEffect(() => {
+      checkLogin(); 
+    });  
+    /************** useEffect 영역 [끝] *******************/ 
 
     /************** 변수 영역 *******************/
     let history = useHistory();
@@ -36,7 +44,16 @@ function BtnLogin(props) {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-
+  
+  // 로그인 여부 확인 : 각각의 상황에 맞춰 값을 할당
+  function checkLogin() {
+    let token = localStorage.getItem('authToken');
+    if (token != null) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }
 
   // 로그아웃 요청 : authToken 삭제
   const tryLogout = () => {
@@ -44,14 +61,7 @@ function BtnLogin(props) {
       history.push('/'); // 로그아웃 후 redirect 설정...
   }
 
-  /************** useEffect 영역 ************************/ 
-  useEffect(() => {
-    if (props.authToken != null) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }); // 로그인 상태를 확인하여 rendering을 진행해야 하기 때문에 2번째 인자값 제거  /************** useEffect 영역 [끝] *******************/ 
+
 
 
   /************** HTML 화면 영역 **************/ 
@@ -74,7 +84,7 @@ function BtnLogin(props) {
       onCancel={handleCancel}
       footer={null}>
       {/* 로그인 완료시 모달을 종료하기 위해 props넘기기 */}
-      <Signup setIsModalVisible={setIsModalVisible} click={click}/>
+      <Signup isLogin={isLogin} setIsLogin={setIsLogin} setIsModalVisible={setIsModalVisible} click={click}/>
   </Modal>
   </>
   );
