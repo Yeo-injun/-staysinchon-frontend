@@ -24,6 +24,9 @@ function Reservation() {
     // 변환되는 자료형이 배열이면 초기값도 배열로 반영
     let [ roomData, setRoomData ] = useState([]); 
     let [ isOk, setIsOk ] = useState(false);
+
+    let [ check_in, setCheck_in ] = useState(moment('2015/01/01', dateFormat));
+    let [ check_out, setCheck_out ] = useState('');
     /************** useState [끝] **************/ 
 
 
@@ -45,8 +48,26 @@ function Reservation() {
             .catch(()=>{ '요청실패시실행할코드' })
     }
 
-  /************** HTML 화면 영역 **************/ 
-  return (
+    /* 방 목록 Search */
+    function getSearchRoom() {
+        var searchCond = new Object();
+        searchCond.check_in = check_in;
+        searchCond.check_out = check_out;
+
+        // 쿼리 스트링 사용하기
+        axios.get('http://localhost:8080/rooms'
+                 , {params : searchCond})
+             .then((result)=>{
+                 var rs = result.data;
+                 setRoomData(rs);
+             })
+             .catch(()=>{ '요청실패시실행할코드' })
+
+    }
+
+
+    /************** HTML 화면 영역 **************/ 
+    return (
         <div className="contents">
             <ImageSlider slides={SliderData} />
             <div className ="title" >
@@ -59,11 +80,48 @@ function Reservation() {
                 <Space direction="vertical" size={12}>
                     <RangePicker 
                     defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                    format={dateFormat} />
+                    format={dateFormat}
+                    value={} />
                 </Space>
 
+
+
+  <Space direction="vertical" size={12}>
+    <DatePicker
+      dateRender={current => {
+        const style = {};
+        if (current.date() === 1) {
+          style.border = '1px solid #1890ff';
+          style.borderRadius = '50%';
+        }
+        return (
+          <div className="ant-picker-cell-inner" style={style}>
+            {current.date()}
+          </div>
+        );
+      }}
+    />
+    <RangePicker
+      dateRender={current => {
+        const style = {};
+        if (current.date() === 1) {
+          style.border = '1px solid #1890ff';
+          style.borderRadius = '50%';
+        }
+        return (
+          <div className="ant-picker-cell-inner" style={style}>
+            {current.date()}
+          </div>
+        );
+      }}
+    />
+  </Space>
+
+
+
+
                 {/* [구현예정] onClick 메소드로 검색 호출 */}
-                <Button  style = {{margin: '10px'}}>Search</Button>
+                <Button  style = {{marginRight: '10px'}}>Search</Button>
             </div>
 
             {// RommData 뿌려주기 
