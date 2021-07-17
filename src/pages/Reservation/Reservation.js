@@ -25,8 +25,7 @@ function Reservation() {
     let [ roomData, setRoomData ] = useState([]); 
     let [ isOk, setIsOk ] = useState(false);
 
-    let [ check_in, setCheck_in ] = useState(moment('2015/01/01', dateFormat));
-    let [ check_out, setCheck_out ] = useState('');
+    let [ searchCond, setSearchCond ] = useState([]); // 검색일자 State
     /************** useState [끝] **************/ 
 
 
@@ -50,19 +49,22 @@ function Reservation() {
 
     /* 방 목록 Search */
     function getSearchRoom() {
-        var searchCond = new Object();
-        searchCond.check_in = check_in;
-        searchCond.check_out = check_out;
-
+        console.log(searchCond);
         // 쿼리 스트링 사용하기
-        axios.get('http://localhost:8080/rooms'
-                 , {params : searchCond})
+        axios.get('http://localhost:8080/rooms/search?check_in=' + searchCond[0] +'&check_out='+ searchCond[1])
              .then((result)=>{
                  var rs = result.data;
                  setRoomData(rs);
              })
              .catch(()=>{ '요청실패시실행할코드' })
 
+    }
+
+    /* datePicker에서 날짜값 가져오기 */
+    function updateDate(value, dateString) {
+        // Q. value, dateString 파라미터값이 무엇하고 매칭되는지 확인 필요...
+        setSearchCond(dateString);
+        console.log(searchCond);
     }
 
 
@@ -75,53 +77,28 @@ function Reservation() {
             </div>
             <br/>
 
-            {/* DatePicker */}
+            {/* DatePicker : https://ant.design/components/date-picker/*/}
             <div className = "datepicker">
                 <Space direction="vertical" size={12}>
-                    <RangePicker 
-                    defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                    format={dateFormat}
-                    value={} />
+                    <RangePicker
+                        dateRender={current => {
+                            const style = {};
+                            if (current.date() === 1) {
+                            style.border = '1px solid #1890ff';
+                            style.borderRadius = '50%';
+                            }
+                            return (
+                            <div className="ant-picker-cell-inner" style={style}>
+                                {current.date()}
+                            </div>
+                            );
+                        }}
+                        onChange={ updateDate } // 날짜가 변경될때 콜백함수 호출
+                    />
                 </Space>
 
-
-
-  <Space direction="vertical" size={12}>
-    <DatePicker
-      dateRender={current => {
-        const style = {};
-        if (current.date() === 1) {
-          style.border = '1px solid #1890ff';
-          style.borderRadius = '50%';
-        }
-        return (
-          <div className="ant-picker-cell-inner" style={style}>
-            {current.date()}
-          </div>
-        );
-      }}
-    />
-    <RangePicker
-      dateRender={current => {
-        const style = {};
-        if (current.date() === 1) {
-          style.border = '1px solid #1890ff';
-          style.borderRadius = '50%';
-        }
-        return (
-          <div className="ant-picker-cell-inner" style={style}>
-            {current.date()}
-          </div>
-        );
-      }}
-    />
-  </Space>
-
-
-
-
-                {/* [구현예정] onClick 메소드로 검색 호출 */}
-                <Button  style = {{marginRight: '10px'}}>Search</Button>
+                {/* onClick 메소드로 검색 호출 */}
+                <Button style = {{marginRight: '10px'}} onClick={ getSearchRoom }>Search</Button>
             </div>
 
             {// RommData 뿌려주기 
