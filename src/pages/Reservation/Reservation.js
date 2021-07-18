@@ -2,13 +2,18 @@
 import './Reservation.css'; // css 적용
 
 import React, { useState, useEffect } from 'react'
+import { Route, Link } from 'react-router-dom';
+
 import moment from "moment";
 import { DatePicker, Space } from "antd";
 import "antd/dist/antd.css";
+
+import axios from 'axios';
+
 import ImageSlider from '../../components/ImageSlider/ImageSlider';
 import { SliderData } from '../../components/ImageSlider/Data';
 import { Button } from '../../globalStyles';
-import axios from 'axios';
+
 
 
 function Reservation() {
@@ -23,9 +28,10 @@ function Reservation() {
     // useState 초기값 설정이 중요함
     // 변환되는 자료형이 배열이면 초기값도 배열로 반영
     let [ roomData, setRoomData ] = useState([]); 
-    let [ isOk, setIsOk ] = useState(false);
+    let [ isLogin, setIsLogin ] = useState(false); // 로그인여부 확인 : Auth확인 (향후 공통으로 작업하기..)
 
     let [ searchCond, setSearchCond ] = useState([]); // 검색일자 State
+    let [ callUrl, setCallUrl ] = useState('/reservation/form/a2/3/4');
     /************** useState [끝] **************/ 
 
 
@@ -33,9 +39,22 @@ function Reservation() {
     // room 데이터 받아오기 : useEffect() 안에서 Axios로 API서버 호출
     // useEffect 실행시기 1. 컴포넌트 로딩이 끝난 후(mount 완료) 2. 컴포넌트 재렌더링 끝난 후(update 완료)
     useEffect(()=> {
+        checkLogin();
         getRoomList();
-    }, []); // useEffect()의 두번째 인자는 useEffect 호출횟수를 지정( []값이 있을때는 1번만 호출 )
+    }, [isLogin]); 
+    // isLogin State가 변화할때마다 useEffect호출됨
+    // useEffect()의 두번째 인자는 useEffect 호출횟수를 지정( []값이 있을때는 1번만 호출 )
     /************** useEffect [끝] *******************/ 
+
+    /* 로그인 상태 확인 메서드 */
+    function checkLogin() {
+        let token = localStorage.getItem('authToken');
+        if (token != null) {
+          setIsLogin(true);
+        } else {
+          setIsLogin(false);
+        }
+    }
 
     /* 방 목록 기본값 호출 */
     function getRoomList() {
@@ -58,6 +77,19 @@ function Reservation() {
              })
              .catch(()=>{ '요청실패시실행할코드' })
 
+    }
+
+    /* 예약신청 Form으로 이동하기 */
+    function gotoReservationForm() {
+        if(!isLogin) {
+            alert("로그인해주세요!");
+        } else {
+            var url = 'reservation/form/1/'+searchCond[0]+'/'+searchCond[1];
+            alert(url + "___________");
+            setCallUrl(url);
+            alert(callUrl);
+            alert("Form 보여조요!!");
+        }
     }
 
     /* datePicker에서 날짜값 가져오기 */
@@ -119,8 +151,11 @@ function Reservation() {
                             <li>Monthly Price : { room.price_day }</li>
                         </div>
 
+                        {/* 화면 전환은 Link태그 활용 */}
                         <div className="button">
-                            <Button>Book This Room</Button>
+                        <Link to={callUrl} >
+                            <Button onClick={gotoReservationForm}>Book This Room</Button>
+                        </Link>
                         </div>
                     </div>
                )}
