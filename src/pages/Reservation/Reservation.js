@@ -101,14 +101,14 @@ function Reservation() {
                 <Button style = {{marginRight: '10px'}} onClick={ getSearchRoom }>Search</Button>
             </div>
 
-            {// RommData 뿌려주기 
+            {/* RommData 뿌려주기 */
             roomData.map(
                 (room) => { 
                     console.log(room);
                     return (
                     <div className="roomItem">
                         <img src=""/>
-                        <span>방 이름</span> {/** DB컬럼 추가 요망 : 방이름 */}
+                        <span><h3>{room.room_name}</h3></span>
                         <p>Room Type : { room.room_type }</p>
                         <p>Accommodate : { room.capacity }</p>
                         <p>Beds : { room.bed }</p>
