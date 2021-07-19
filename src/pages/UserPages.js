@@ -18,7 +18,7 @@ function UserPages() {
         <Switch>
           <Route exact path='/' component = {Home} />
           <Route exact path='/reservation' component = {Reservation} />
-          <Route exact path='/reservation/form/:check_in/:check_out/:room_ID' component = {ReservationForm} />
+          <Route exact path='/reservation/form' component = {ReservationForm} />
           <Route exact path='/signup' component={Signup} />
           <Route exact path="/register" component={Register} /> 
         </Switch>

@@ -31,7 +31,7 @@ function Reservation() {
     let [ isLogin, setIsLogin ] = useState(false); // 로그인여부 확인 : Auth확인 (향후 공통으로 작업하기..)
 
     let [ searchCond, setSearchCond ] = useState([]); // 검색일자 State
-    let [ callUrl, setCallUrl ] = useState('/reservation/form/a2/3/4');
+    let [ isCallable, setIsCallable ] = useState(false);
     /************** useState [끝] **************/ 
 
 
@@ -79,17 +79,18 @@ function Reservation() {
 
     }
 
-    /* 예약신청 Form으로 이동하기 */
-    function gotoReservationForm() {
-        if(!isLogin) {
-            alert("로그인해주세요!");
-        } else {
-            var url = 'reservation/form/1/'+searchCond[0]+'/'+searchCond[1];
-            alert(url + "___________");
-            setCallUrl(url);
-            alert(callUrl);
-            alert("Form 보여조요!!");
+    /* Form이동 전 check in, check out 입력 상태 확인하기 */
+    function checkValidDate() {
+        if(searchCond[0] === undefined) {
+            alert("Please select check in date.");
+            return;
         }
+        
+        if(searchCond[1] === undefined) {
+            alert("Pleass select check out date.");
+            return;
+        }
+        setIsCallable(true);
     }
 
     /* datePicker에서 날짜값 가져오기 */
@@ -151,11 +152,42 @@ function Reservation() {
                             <li>Monthly Price : { room.price_day }</li>
                         </div>
 
-                        {/* 화면 전환은 Link태그 활용 */}
+                        {/* 화면 전환은 Link태그 활용 : 로그인시에만 화면 전환되도록 구현해야함...*/}
                         <div className="button">
-                        <Link to={callUrl} >
-                            <Button onClick={gotoReservationForm}>Book This Room</Button>
-                        </Link>
+                            {(!isLogin) 
+                            ? console.log("login")
+                            /* Link태그에서 데이터를 넘겨주는 방법 3가지 
+                            /       1. App.js Router에 url 등록시 param 값 설정
+                            /       2. QueryString값 설정 (ex. ?key=Value)
+                            /       --------------------------------- 이상의 방법 단점 : URL에 전달하고자하는 값이 노출됨
+                            /       3. to 속성을 객체로 만들어서 넘겨줌. 
+                            /            - to속성내의 객체 속성 : pathname, state 등
+                            /            - 데이터를 넘겨받는 컴포넌트에서는 함수의 파라미터값으로 {location} 추가
+                            /            참고자료 : https://wodyios.tistory.com/6
+                            */
+                            : 
+                                <Button onClick={checkValidDate}>
+                                    {/* checkValidDate 함수에서 check in, check out 검증 후 
+                                        입력값이 존재할 경우에 isCallable State값을 true로 변환. 
+                                        삼항연산자를 통해 isCallable 값에 따라 Link적용 여부 분기*/}
+                                    {(isCallable) 
+                                    ?   <Link to={{ 
+                                                pathname : '/reservation/form',
+                                                state : {
+                                                    check_in : searchCond[0],
+                                                    check_out : searchCond[1],
+                                                    room_ID : room.room_ID
+                                                }
+                                            }} 
+                                        >
+                                            <Button>Book This Room</Button>
+                                        </Link>
+                                    : <Button>Book This Room</Button>
+                                    }
+                                </Button>
+                              
+                            }
+                        
                         </div>
                     </div>
                )}

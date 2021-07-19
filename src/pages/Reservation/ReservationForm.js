@@ -83,7 +83,7 @@ const formItemLayout = {
 
 // Link 태그에 url 설정시 데이터값 넘겨줄 수 있음
 // {match} 로 받아서 데이터 사용가능 
-function Reservationinfo({match}) {
+function Reservationinfo({location}) {
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
@@ -94,9 +94,9 @@ function Reservationinfo({match}) {
     return (
         <div className="contents">
         <div>
-          <h2>Room to Reserve : {match.params.room_ID}</h2>
-          <h3>Check In Date : {match.params.check_in}</h3>
-          <h3>Check Out Date : {match.params.check_out}</h3>
+          <h2>Room to Reserve : {location.state.room_ID}</h2>
+          <h3>Check In Date : {location.state.check_in}</h3>
+          <h3>Check Out Date : {location.state.check_out}</h3>
         </div>
 
         <Form
