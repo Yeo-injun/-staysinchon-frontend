@@ -1,9 +1,11 @@
 import './Reservation.css'; // css 적용
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Cascader, Radio} from 'antd';
+
+import axios from 'axios';
 
 
 const countries = [
@@ -84,11 +86,62 @@ const formItemLayout = {
 // Link 태그에 url 설정시 데이터값 넘겨줄 수 있음
 // {match} 로 받아서 데이터 사용가능 
 function Reservationinfo({location}) {
-    const [form] = Form.useForm();
+      /************** 전역 변수 *******************/
 
-    const onFinish = (values) => {
-      console.log('Received values of form: ', values);
-    };
+      /************** 전역 변수 [끝] *******************/
+  
+  
+      /************** useState *******************/ 
+      // 예약신청(Submit) 버튼을 누르면 POST로 넘어갈 데이터 선언
+      let [ firstname, setFirstname ] = useState('first Name');
+      let [ lastname, setLastname ] = useState('');
+      let [ sex, setSex ] = useState('');
+      let [ country, setCountry ] = useState('');
+      let [ NA_foods, setNA_Foods ] = useState('');
+      /************** useState [끝] **************/ 
+  
+  
+      /************** useEffect ************************/ 
+      useState(()=> {
+        getUserInfo();
+      }, []);
+      /************** useEffect [끝] *******************/ 
+
+      function getUserInfo() {
+
+        // axios POST 요청
+        axios.get(  "http://localhost:8080/reservation/form"
+                  , { headers : { 
+                                  'Authorization': localStorage.getItem("authToken") 
+                                }
+                  })
+          .then(function (response) {
+            let result = response.data;
+            console.log(result);
+            console.log(result.lastname);
+            console.log(result.sex);
+            /* useState 변화가 안됨... */
+            if(result.userInfo) {
+              setFirstname(result.firstname);
+              setLastname(result.lastname);
+              setSex(result.sex);
+              setCountry(result.country);
+              setNA_Foods(result.NA_foods);
+            }
+            console.log(lastname);
+            console.log(sex);
+            alert("통신 정상 종료");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      const [form] = Form.useForm();
+
+      const onFinish = (values) => {
+        console.log('Received values of form: ', values);
+      };
 
 
     return (
@@ -117,7 +170,7 @@ function Reservationinfo({location}) {
               },
               ]}
           >
-           <Input />
+           <Input defaultValue = {firstname/* 디폴트 값 반영*/}/>
           </Form.Item>
 
           {/* 성 입력창 */}
