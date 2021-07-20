@@ -31,6 +31,7 @@ function Reservation() {
     let [ isLogin, setIsLogin ] = useState(false); // 로그인여부 확인 : Auth확인 (향후 공통으로 작업하기..)
 
     let [ searchCond, setSearchCond ] = useState([]); // 검색일자 State
+    let [ searchState, setSearchState ] = useState(false);
     let [ isCallable, setIsCallable ] = useState(false);
     /************** useState [끝] **************/ 
 
@@ -72,6 +73,7 @@ function Reservation() {
         // 쿼리 스트링 사용하기
         axios.get('http://localhost:8080/rooms/search?check_in=' + searchCond[0] +'&check_out='+ searchCond[1])
              .then((result)=>{
+                 setSearchState(true);
                  var rs = result.data;
                  setRoomData(rs);
              })
@@ -80,7 +82,7 @@ function Reservation() {
     }
 
     /* Form이동 전 check in, check out 입력 상태 확인하기 */
-    function checkValidDate() {
+    function checkValidClick() {
         if(searchCond[0] === undefined) {
             alert("Please select check in date.");
             return;
@@ -90,6 +92,12 @@ function Reservation() {
             alert("Pleass select check out date.");
             return;
         }
+
+        if(!searchState) {
+            alert("Please push search button");
+            return;
+        }
+        
         setIsCallable(true);
     }
 
@@ -97,6 +105,7 @@ function Reservation() {
     function updateDate(value, dateString) {
         // Q. value, dateString 파라미터값이 무엇하고 매칭되는지 확인 필요...
         setSearchCond(dateString);
+        setSearchState(false);
         console.log(searchCond);
     }
 
@@ -166,7 +175,7 @@ function Reservation() {
                             /            참고자료 : https://wodyios.tistory.com/6
                             */
                             : 
-                                <Button onClick={checkValidDate}>
+                                <Button onClick={checkValidClick}>
                                     {/* checkValidDate 함수에서 check in, check out 검증 후 
                                         입력값이 존재할 경우에 isCallable State값을 true로 변환. 
                                         삼항연산자를 통해 isCallable 값에 따라 Link적용 여부 분기*/}
