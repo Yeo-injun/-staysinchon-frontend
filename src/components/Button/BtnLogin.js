@@ -74,7 +74,11 @@ function BtnLogin(props) {
   /* 비로그인 상태 : LOG IN버튼 노출 */
   return (
   <>
-  <Button onClick={ showModal }>LOG IN</Button>
+  { // Reservation 화면에서 비로그인 상태일 경우 보여주는 버튼 값
+  (props.whereCall === "reservation") 
+    ? <Button onClick={ showModal }>Login for Booking</Button>
+    : <Button onClick={ showModal }>LOG IN</Button>
+  }
 
   {/* 로그인 Modal 팝업 */}
   <Modal 

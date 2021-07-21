@@ -14,7 +14,7 @@ import ImageSlider from '../../components/ImageSlider/ImageSlider';
 import { SliderData } from '../../components/ImageSlider/Data';
 import { Button } from '../../globalStyles';
 
-import * as BtnLogin from '../../components/Button/BtnLogin'
+import BtnLogin from '../../components/Button/BtnLogin'
 
 function Reservation() {
     
@@ -164,7 +164,7 @@ function Reservation() {
                         {/* 화면 전환은 Link태그 활용 : 로그인시에만 화면 전환되도록 구현해야함...*/}
                         <div className="button">
                             {(!isLogin) 
-                            ? <Button onClick={BtnLogin.showModal()}>Log in for booking</Button>
+                            ? <BtnLogin whereCall={"reservation"}/>
                             /* Link태그에서 데이터를 넘겨주는 방법 3가지 
                             /       1. App.js Router에 url 등록시 param 값 설정
                             /       2. QueryString값 설정 (ex. ?key=Value)
