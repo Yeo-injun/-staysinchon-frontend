@@ -87,7 +87,6 @@ const formItemLayout = {
 // {match} 로 받아서 데이터 사용가능 
 function Reservationinfo({location}) {
       /************** 전역 변수 *******************/
-
       /************** 전역 변수 [끝] *******************/
   
   
@@ -100,42 +99,70 @@ function Reservationinfo({location}) {
       let [ NA_foods, setNA_Foods ] = useState('');
       /************** useState [끝] **************/ 
   
-  
+      // const getUserInfo = async () => {
+      //     const user = await callUserInfo();
+      //       console.log("2");
+      //       console.log(user);
+      //       setFirstname("dddasddddd");
+      //       setLastname(user.lastname);
+      //       setSex(user.sex);
+      //       setCountry(user.country);
+      //       setNA_Foods(user.NA_foods);
+      //       console.log("3");
+      //       console.log(lastname);
+         
+      // }
+
+    function getUserInfo(){
+      let result = // axios POST 요청
+      axios.get(  "http://localhost:8080/reservation/form"
+              , { headers : { 
+                              'Authorization': localStorage.getItem("authToken") 
+                            }
+              })
+      .then(function (response) {
+        let data = response.data;
+        setLastname(data.lastname);
+        console.log("1");
+        console.log(data);
+        console.log(lastname);
+        alert("통신 정상 종료");
+        return data;
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      return result;
+    }
+
       /************** useEffect ************************/ 
-      useState(()=> {
-        getUserInfo();
+      useState( async ()=> {
+        const user = await getUserInfo();
+        console.log("2");
+        console.log(user);
+        console.log(user.firstname);
+        const in1 = await function (user) {
+          alert("3");
+          setFirstname(user.firstname);
+        }
+        in1(user);
+        alert("4");
+        console.log("4");
+        console.log(in1);
+        console.log(firstname);
+
+        
+
+        /* useState 변화가 안됨... */
+
+        
+        console.log(firstname);
+        console.log(sex);
+
       }, []);
       /************** useEffect [끝] *******************/ 
 
-      function getUserInfo() {
-
-        // axios POST 요청
-        axios.get(  "http://localhost:8080/reservation/form"
-                  , { headers : { 
-                                  'Authorization': localStorage.getItem("authToken") 
-                                }
-                  })
-          .then(function (response) {
-            let result = response.data;
-            console.log(result);
-            console.log(result.lastname);
-            console.log(result.sex);
-            /* useState 변화가 안됨... */
-            if(result.userInfo) {
-              setFirstname(result.firstname);
-              setLastname(result.lastname);
-              setSex(result.sex);
-              setCountry(result.country);
-              setNA_Foods(result.NA_foods);
-            }
-            console.log(lastname);
-            console.log(sex);
-            alert("통신 정상 종료");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
 
       const [form] = Form.useForm();
 
