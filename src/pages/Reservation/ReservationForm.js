@@ -68,108 +68,84 @@ const formItemLayout = {
       },
     },
   };
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
-      },
-      sm: {
-        span: 16,
-        offset: 8,
-      },
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
     },
-  };
+    sm: {
+      span: 16,
+      offset: 8,
+    },
+  },
+};
+
+  
+
 
 /* input태그 안에 입력값 POST로 보내기 */
-
 // Link 태그에 url 설정시 데이터값 넘겨줄 수 있음
-// {match} 로 받아서 데이터 사용가능 
 function Reservationinfo({location}) {
-      /************** 전역 변수 *******************/
-      /************** 전역 변수 [끝] *******************/
-  
-  
-      /************** useState *******************/ 
-      // 예약신청(Submit) 버튼을 누르면 POST로 넘어갈 데이터 선언
-      let [ firstname, setFirstname ] = useState('first Name');
-      let [ lastname, setLastname ] = useState('');
-      let [ sex, setSex ] = useState('');
-      let [ country, setCountry ] = useState('');
-      let [ NA_foods, setNA_Foods ] = useState('');
-      /************** useState [끝] **************/ 
-  
-      // const getUserInfo = async () => {
-      //     const user = await callUserInfo();
-      //       console.log("2");
-      //       console.log(user);
-      //       setFirstname("dddasddddd");
-      //       setLastname(user.lastname);
-      //       setSex(user.sex);
-      //       setCountry(user.country);
-      //       setNA_Foods(user.NA_foods);
-      //       console.log("3");
-      //       console.log(lastname);
-         
-      // }
+
+
+    /************** 전역 변수 *******************/
+    const [form] = Form.useForm(); 
+    let temp;
+    /************** 전역 변수 [끝] *******************/
+
+    /************** useState *******************/ 
+    // 예약신청(Submit) 버튼을 누르면 POST로 넘어갈 데이터 선언
+    let [ firstname, setFirstname ] = useState('');
+    let [ lastname, setLastname ] = useState('');
+    let [ sex, setSex ] = useState('');
+    let [ country, setCountry ] = useState('');
+    let [ NA_foods, setNA_Foods ] = useState('');
+    let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
+    let [ userInfoYN, setUserInfoYN ] = useState(false);
+    /************** useState [끝] **************/ 
 
     function getUserInfo(){
-      let result = // axios POST 요청
       axios.get(  "http://localhost:8080/reservation/form"
               , { headers : { 
                               'Authorization': localStorage.getItem("authToken") 
                             }
               })
       .then(function (response) {
-        let data = response.data;
-        setLastname(data.lastname);
-        console.log("1");
-        console.log(data);
-        console.log(lastname);
-        alert("통신 정상 종료");
-        return data;
-
+          let data = response.data;
+          if(data.userInfo){
+              console.log("예약이력 존재");
+              setFirstname(data.firstname);
+              setLastname(data.lastname);
+              setSex(data.sex);
+              setCountry(data.country);
+              setNA_Foods(data.NA_foods);
+              setUserInfoYN(true);
+              setIsLoading(false);
+          }
       })
       .catch(function (error) {
         console.log(error);
       });
-      return result;
     }
 
-      /************** useEffect ************************/ 
-      useState( async ()=> {
-        const user = await getUserInfo();
-        console.log("2");
-        console.log(user);
-        console.log(user.firstname);
-        const in1 = await function (user) {
-          alert("3");
-          setFirstname(user.firstname);
-        }
-        in1(user);
-        alert("4");
-        console.log("4");
-        console.log(in1);
-        console.log(firstname);
-
-        
-
-        /* useState 변화가 안됨... */
-
-        
-        console.log(firstname);
-        console.log(sex);
-
-      }, []);
-      /************** useEffect [끝] *******************/ 
+    /************** useEffect ************************/ 
+    useState( async ()=> {
+        await getUserInfo(); // Axios 동기 처리 : Axios는 기본적으로 비동기통신으로 Javascript렌더링시 마지막에 처리됨.
+        alert("통신 종료");
+    }, []);
+    /************** useEffect [끝] *******************/ 
 
 
-      const [form] = Form.useForm();
+    const onFinish = (values) => {
+      console.log('Received values of form: ', values);
+    };
 
-      const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-      };
-
+  
+    if (isLoading) {
+      return <div className="App">Loading...</div>;
+    }
 
     return (
         <div className="contents">
@@ -197,7 +173,18 @@ function Reservationinfo({location}) {
               },
               ]}
           >
-           <Input defaultValue = {firstname/* 디폴트 값 반영*/}/>
+          
+          {(userInfoYN) ? 
+                  <Input 
+                      disabled = "true"
+                      defaultValue = { firstname }
+                      onChange={(e)=>{ setFirstname(e.target.value) }}
+                  />
+                  : 
+                  <Input
+                      onChange={(e)=>{ setFirstname(e.target.value) }}
+                  />
+          }
           </Form.Item>
 
           {/* 성 입력창 */}
@@ -211,7 +198,17 @@ function Reservationinfo({location}) {
               },
               ]}
           >
-            <Input />
+              {(userInfoYN) ? 
+                  <Input 
+                      disabled = "true"
+                      defaultValue = { lastname }
+                      onChange={(e)=>{ setLastname(e.target.value) }}
+                  />
+                  : 
+                  <Input
+                      onChange={(e)=>{ setLastname(e.target.value) }}
+                  />
+              }
           </Form.Item>
           
           {/* 국가 입력창 */}
