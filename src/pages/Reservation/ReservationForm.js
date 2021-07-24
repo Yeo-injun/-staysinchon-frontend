@@ -10,44 +10,46 @@ import axios from 'axios';
 
 const countries = [
     {
-      value: 'Republic of Korea',
-      label: 'Republic of Korea',
+        value: 'Republic of Korea',
+        label: 'Republic of Korea',
     },
+    
     {
         value: 'Australia',
         label: 'Australia',
-      },
-      {
+    },
+    
+    {
         value: 'Estonia',
         label: 'Estonia',
-      },
+    },
   ];
 
   const age_group = [
     {
-      value: 1,
-      label: '~ 19',
+        value: 1,
+        label: '~ 19',
     },
     {
         value: 2,
         label: '20 ~ 29',
-      },
-      {
+    },
+    {
         value: 3,
         label: '30 ~ 39',
-      },
-      {
+    },
+    {
         value: 4,
         label: '40 ~ 49',
-      },
-      {
+    },
+    {
         value: 5,
         label: '50 ~ 59',
-      },
-      {
+    },
+    {
         value: 6,
         label: '60 ~',
-      },
+    },
   ];
 
 const formItemLayout = {
@@ -92,7 +94,6 @@ function Reservationinfo({location}) {
 
     /************** 전역 변수 *******************/
     const [form] = Form.useForm(); 
-    let temp;
     /************** 전역 변수 [끝] *******************/
 
     /************** useState *******************/ 
@@ -101,9 +102,12 @@ function Reservationinfo({location}) {
     let [ lastname, setLastname ] = useState('');
     let [ sex, setSex ] = useState('');
     let [ country, setCountry ] = useState('');
+    let [ ageGroup, setAgeGroup ] = useState('');
     let [ NA_foods, setNA_Foods ] = useState('');
+
     let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
     let [ userInfoYN, setUserInfoYN ] = useState(false);
+    
     /************** useState [끝] **************/ 
 
     function getUserInfo(){
@@ -121,6 +125,7 @@ function Reservationinfo({location}) {
               setSex(data.sex);
               setCountry(data.country);
               setNA_Foods(data.NA_foods);
+              setAgeGroup(6);
               setUserInfoYN(true);
               setIsLoading(false);
           }
@@ -128,6 +133,14 @@ function Reservationinfo({location}) {
       .catch(function (error) {
         console.log(error);
       });
+    }
+
+    function setDefaultAgeGroup() {
+        for (var idx = 1; idx <= age_group.length; idx++){
+            if (ageGroup == idx) {
+              return age_group[ageGroup-1].label;
+            }
+        }
     }
 
     /************** useEffect ************************/ 
@@ -198,14 +211,13 @@ function Reservationinfo({location}) {
               },
               ]}
           >
-              {(userInfoYN) ? 
-                  <Input 
+              {(userInfoYN)  
+                  ? <Input 
                       disabled = "true"
                       defaultValue = { lastname }
                       onChange={(e)=>{ setLastname(e.target.value) }}
                   />
-                  : 
-                  <Input
+                  : <Input
                       onChange={(e)=>{ setLastname(e.target.value) }}
                   />
               }
@@ -223,8 +235,16 @@ function Reservationinfo({location}) {
               },
             ]}
           >
-            <Cascader options={countries} />
+            {(userInfoYN) 
+                ? <Input 
+                defaultValue = {country}
+                disabled = "true"/>
+                : <Cascader 
+                      options = {countries}
+                      onChange = {(e) => {setCountry(e.target.value)}} />
+            }
           </Form.Item>
+
 
           {/* 연령대 입력창 */}
           <Form.Item
@@ -238,7 +258,14 @@ function Reservationinfo({location}) {
               },
             ]}
           >
-            <Cascader options={age_group} />
+            {(userInfoYN) 
+                ? <Input 
+                defaultValue = {setDefaultAgeGroup()}
+                disabled = "true"/>
+                : <Cascader 
+                      options = {age_group}
+                      onChange = {(e) => {setAgeGroup(e.target.value)}} />
+            }
           </Form.Item>
 
           {/* 성별 입력창 */}
@@ -251,10 +278,22 @@ function Reservationinfo({location}) {
                 message: 'Please select your gender!',
               },
             ]}>
-            <Radio.Group>
-              <Radio value="1">Male</Radio>
-              <Radio value="2">Female</Radio>
-            </Radio.Group>
+            
+              {(userInfoYN)
+                  ? (sex == 0) // sex값이 0(false)이면 남자, 1이면(true) 여자 
+                        ? <Radio.Group defaultValue = "0">
+                              <Radio value="0" disabled = "true">Male</Radio>
+                              <Radio value="1" disabled = "true">Female</Radio> 
+                          </Radio.Group>
+                        : <Radio.Group defaultValue = "1">
+                              <Radio value="0" disabled = "true">Male</Radio>
+                              <Radio value="1" disabled = "true">Female</Radio>
+                          </Radio.Group>
+                  : <Radio.Group>
+                        <Radio value="0" >Male</Radio>
+                        <Radio value="1">Female</Radio>
+                    </Radio.Group>
+              }
           </Form.Item>
 
           {/* 알레르기 입력창 */}
