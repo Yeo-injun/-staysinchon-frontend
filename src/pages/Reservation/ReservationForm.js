@@ -112,15 +112,15 @@ function Reservationinfo({location}) {
     /* POST */ let check_in = location.state.check_in;
     /* POST */ let check_out = location.state.check_out;
     /* POST */ let [ stayPurpose, setStayPurpose ] = useState('');
-    /* POST */ let [ numOfGuests, setNumOfGuests ] = useState('');
+    /* POST */ let [ numOfGuests, setNumOfGuests ] = useState(1);
     /* POST */ let [ message, setMessage ] = useState('');
         
-    let [ firstname, setFirstname ] = useState('');
-    let [ lastname, setLastname ] = useState('');
-    let [ sex, setSex ] = useState('');
-    let [ country, setCountry ] = useState('');
-    let [ ageGroup, setAgeGroup ] = useState('');
-    let [ NA_foods, setNA_foods ] = useState('');
+    /* POST 조건부 */ let [ firstname, setFirstname ] = useState('');
+    /* POST 조건부 */ let [ lastname, setLastname ] = useState('');
+    /* POST 조건부 */ let [ sex, setSex ] = useState('');
+    /* POST 조건부 */ let [ country, setCountry ] = useState('');
+    /* POST 조건부 */ let [ ageGroup, setAgeGroup ] = useState('');
+    /* POST 조건부 */ let [ NA_foods, setNA_foods ] = useState('');
 
     let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
     let [ userInfoYN, setUserInfoYN ] = useState(false);
@@ -144,8 +144,8 @@ function Reservationinfo({location}) {
               setNA_foods(data.NA_foods);
               setAgeGroup(data.age_group);
               setUserInfoYN(true);
-              setIsLoading(false);
           }
+          setIsLoading(false); // axios 통신 완료되면 화면전환되게끔 제어
       })
       .catch(function (error) {
         console.log(error);
@@ -172,6 +172,49 @@ function Reservationinfo({location}) {
       console.log('Received values of form: ', values);
     };
 
+    /* POST 예약신청하기 */ 
+    function applyReservation() {
+        alert("예약 신청!");
+        console.log(country);
+        console.log(country[0]);
+        // post 데이터
+        const data = {
+          room_ID : room_ID,
+          check_in : check_in,
+          check_out : check_out,
+          stay_purpose : stayPurpose,
+          num_of_guests : numOfGuests,
+          payment : payment(),
+          message : message          
+        };
+
+        if (!userInfoYN) {
+            data.firstname = firstname;
+            data.lastname = lastname;
+            data.sex = parseInt(sex);
+            data.country = country[0];
+            data.age_group = ageGroup[0];
+            data.NA_foods = NA_foods;
+        }
+        console.log(data);
+        console.log(typeof(data.payment));
+
+
+        // axios POST 요청
+        axios.post("http://localhost:8080/reservation"
+                  , data
+                  , { headers : { 
+                                'Authorization': localStorage.getItem("authToken") 
+                                }
+                  })
+        .then(function (response) {
+          console.log(response);
+          alert("정상 통신");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   
     if (isLoading) {
       return <div className="App">Loading...</div>;
@@ -195,7 +238,7 @@ function Reservationinfo({location}) {
         >
           {/* 이름 입력창 */}
           <Form.Item
-              name="Firstname"
+              name="firstname"
               label="Firstname"
               rules={[
               {
@@ -218,9 +261,9 @@ function Reservationinfo({location}) {
           }
           </Form.Item>
 
-          {/* 성 입력창 */}
+          {/* 성(이름) 입력창 */}
           <Form.Item
-              name="Lastname"
+              name="lastname"
               label="Lastname"
               rules={[
               {
@@ -259,7 +302,7 @@ function Reservationinfo({location}) {
                 disabled = "true"/>
                 : <Cascader 
                       options = {countries}
-                      onChange = {(e) => {setCountry(e.target.value)}} />
+                      onChange = {(value) => {setCountry(value)}} />
             }
           </Form.Item>
 
@@ -282,7 +325,7 @@ function Reservationinfo({location}) {
                 disabled = "true"/>
                 : <Cascader 
                       options = {age_group}
-                      onChange = {(e) => {setAgeGroup(e.target.value)}} />
+                      onChange = {(value) => {setAgeGroup(value)}} />
             }
           </Form.Item>
 
@@ -307,7 +350,7 @@ function Reservationinfo({location}) {
                               <Radio value="0" disabled = "true">Male</Radio>
                               <Radio value="1" disabled = "true">Female</Radio>
                           </Radio.Group>
-                  : <Radio.Group>
+                  : <Radio.Group onChange={(e)=>{setSex(e.target.value)}}>
                         <Radio value="0" >Male</Radio>
                         <Radio value="1">Female</Radio>
                     </Radio.Group>
@@ -349,7 +392,7 @@ function Reservationinfo({location}) {
               label="num_of_guests"
               rules={[
                 {
-                    required: true,
+                    // required: true,
                 },
               ]}
           >
@@ -369,11 +412,15 @@ function Reservationinfo({location}) {
                 onChange = {(e) => {setMessage(e.target.value)}} />
           </Form.Item>
 
+
+
+
           {/* 제출 버튼 */}
           <Form.Item {...tailFormItemLayout}>
             <Button 
                 type="primary" 
-                htmlType="submit">
+                htmlType="submit"
+                onClick={applyReservation}>
             Submit
             </Button>
           </Form.Item>
