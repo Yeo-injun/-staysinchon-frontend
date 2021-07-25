@@ -94,16 +94,33 @@ function Reservationinfo({location}) {
 
     /************** 전역 변수 *******************/
     const [form] = Form.useForm(); 
+    let room_name = location.state.room_name;
+    let price = location.state.price;
+
+    // 숙박일수(check out - check in) * payment
+    /* POST */ let totalPayment = () => {
+      let chkIn = new Date(check_in);
+      let chkOut = new Date(check_out);
+      let mSecHourDay = chkOut.getTime() - chkIn.getTime();
+      let days = mSecHourDay / 1000 / 60 / 60 /24;
+      return price * days;
+    };
     /************** 전역 변수 [끝] *******************/
 
     /************** useState *******************/ 
-    // 예약신청(Submit) 버튼을 누르면 POST로 넘어갈 데이터 선언
+    
+    /* POST */ let room_ID = location.state.room_ID;
+    /* POST */ let check_in = location.state.check_in;
+    /* POST */ let check_out = location.state.check_out;
+    /* POST */ let [ stayPurpose, setStayPurpose ] = useState('');
+    /* POST */ let [ numOfGuests, setNumOfGuests ] = useState('');
+        
     let [ firstname, setFirstname ] = useState('');
     let [ lastname, setLastname ] = useState('');
     let [ sex, setSex ] = useState('');
     let [ country, setCountry ] = useState('');
     let [ ageGroup, setAgeGroup ] = useState('');
-    let [ NA_foods, setNA_Foods ] = useState('');
+    let [ NA_foods, setNA_foods ] = useState('');
 
     let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
     let [ userInfoYN, setUserInfoYN ] = useState(false);
@@ -124,8 +141,8 @@ function Reservationinfo({location}) {
               setLastname(data.lastname);
               setSex(data.sex);
               setCountry(data.country);
-              setNA_Foods(data.NA_foods);
-              setAgeGroup(6);
+              setNA_foods(data.NA_foods);
+              setAgeGroup(data.age_group);
               setUserInfoYN(true);
               setIsLoading(false);
           }
@@ -163,9 +180,10 @@ function Reservationinfo({location}) {
     return (
         <div className="contents">
         <div>
-          <h2>Room to Reserve : {location.state.room_ID}</h2>
-          <h3>Check In Date : {location.state.check_in}</h3>
-          <h3>Check Out Date : {location.state.check_out}</h3>
+          <h2>Room to Reserve : {room_ID}</h2>
+          <h3>Check In : {check_in}</h3>
+          <h3>Check Out : {check_out}</h3>
+          <h3>Total payment : {totalPayment()}</h3>
         </div>
 
         <Form
@@ -301,7 +319,13 @@ function Reservationinfo({location}) {
               name="NA_foods"
               label="Allergy info"
           >
-            <Input />
+              {(userInfoYN) 
+                ? <Input 
+                defaultValue = {NA_foods}
+                disabled = "true"/>
+                : <Input 
+                      onChange = {(e) => {setNA_foods(e.target.value)}} />
+              }
           </Form.Item>
 
           {/* 기타 요청사항 입력창 */}
