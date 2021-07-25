@@ -93,10 +93,9 @@ function Signup(props) {
         if (rsAuth == undefined){
           alert("Please Check your ID or Password being correct");
         }
-
-        alert("통신 정상 종료");
       })
       .catch(function (error) {
+        alert("There is no ID, Please Check your ID.");
         console.log(error);
       });
   } // tryLogin()

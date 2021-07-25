@@ -158,7 +158,7 @@ function Reservation() {
 
                         <div className="priceContent">
                             <li>Daily Price : { room.price_day }</li>
-                            <li>Monthly Price : { room.price_day }</li>
+                            <li>Monthly Price : { room.price_month }</li>
                         </div>
 
                         {/* 화면 전환은 Link태그 활용 : 로그인시에만 화면 전환되도록 구현해야함...*/}
@@ -185,7 +185,9 @@ function Reservation() {
                                                 state : {
                                                     check_in : searchCond[0],
                                                     check_out : searchCond[1],
-                                                    room_ID : room.room_ID
+                                                    room_name : room.room_name,
+                                                    room_ID : room.room_ID,
+                                                    price : room.price_day
                                                 }
                                             }} 
                                         >

@@ -3,7 +3,7 @@ import './Reservation.css'; // css 적용
 import React, { useState } from 'react'
 
 import 'antd/dist/antd.css';
-import { Form, Input, Button, Cascader, Radio} from 'antd';
+import { Form, Input, InputNumber, Button, Cascader, Radio} from 'antd';
 
 import axios from 'axios';
 
@@ -84,8 +84,6 @@ const tailFormItemLayout = {
   },
 };
 
-  
-
 
 /* input태그 안에 입력값 POST로 보내기 */
 // Link 태그에 url 설정시 데이터값 넘겨줄 수 있음
@@ -96,15 +94,16 @@ function Reservationinfo({location}) {
     const [form] = Form.useForm(); 
     let room_name = location.state.room_name;
     let price = location.state.price;
+    let days;
 
     // 숙박일수(check out - check in) * payment
-    /* POST */ let totalPayment = () => {
-      let chkIn = new Date(check_in);
-      let chkOut = new Date(check_out);
-      let mSecHourDay = chkOut.getTime() - chkIn.getTime();
-      let days = mSecHourDay / 1000 / 60 / 60 /24;
-      return price * days;
-    };
+    /* POST */ let payment = () => {
+                  let chkIn = new Date(check_in);
+                  let chkOut = new Date(check_out);
+                  let mSecHourDay = chkOut.getTime() - chkIn.getTime();
+                  days = mSecHourDay / 1000 / 60 / 60 /24;
+                  return price * days;
+                };
     /************** 전역 변수 [끝] *******************/
 
     /************** useState *******************/ 
@@ -114,6 +113,7 @@ function Reservationinfo({location}) {
     /* POST */ let check_out = location.state.check_out;
     /* POST */ let [ stayPurpose, setStayPurpose ] = useState('');
     /* POST */ let [ numOfGuests, setNumOfGuests ] = useState('');
+    /* POST */ let [ message, setMessage ] = useState('');
         
     let [ firstname, setFirstname ] = useState('');
     let [ lastname, setLastname ] = useState('');
@@ -180,10 +180,10 @@ function Reservationinfo({location}) {
     return (
         <div className="contents">
         <div>
-          <h2>Room to Reserve : {room_ID}</h2>
+          <h2>Room Name : {room_name}</h2>
           <h3>Check In : {check_in}</h3>
           <h3>Check Out : {check_out}</h3>
-          <h3>Total payment : {totalPayment()}</h3>
+          <h3>Total payment : {payment()} (for {days} days)</h3> 
         </div>
 
         <Form
@@ -328,17 +328,52 @@ function Reservationinfo({location}) {
               }
           </Form.Item>
 
-          {/* 기타 요청사항 입력창 */}
+          {/* 숙박목적 */}
           <Form.Item
-              name="etc_info"
+              name="stay_purpose"
+              label="stay_purpose"
+              rules={[
+                {
+                    required: true,
+                    message: 'Please input your purpose of stay!',
+                },
+                ]}
+          >
+              <Input 
+                  onChange = {(e) => {setStayPurpose(e.target.value)}}/>
+          </Form.Item>
+
+          {/* 숙박 인원수 */}
+          <Form.Item
+              name="num_of_guests"
+              label="num_of_guests"
+              rules={[
+                {
+                    required: true,
+                },
+              ]}
+          >
+            <InputNumber 
+                      defaultValue = {1}
+                      min = {1}
+                      max = {4}
+                      onChange = {(num) => {setNumOfGuests(num)}} /> <e> Maximum for staying is 4.</e>
+          </Form.Item>
+
+          {/* 기타 요청사항 입력창 -- 선택 입력*/}
+          <Form.Item
+              name="message"
               label="message"
           >
-            <Input />
+            <Input 
+                onChange = {(e) => {setMessage(e.target.value)}} />
           </Form.Item>
 
           {/* 제출 버튼 */}
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
+            <Button 
+                type="primary" 
+                htmlType="submit">
             Submit
             </Button>
           </Form.Item>
