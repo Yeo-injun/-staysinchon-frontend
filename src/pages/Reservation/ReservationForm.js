@@ -1,6 +1,7 @@
 import './Reservation.css'; // css 적용
 
 import React, { useState } from 'react'
+import { useHistory } from 'react-router'; // 특정경로로 이동시키기 위한 함수
 
 import 'antd/dist/antd.css';
 import { Form, Input, InputNumber, Button, Cascader, Radio} from 'antd';
@@ -91,6 +92,7 @@ function Reservationinfo({location}) {
 
 
     /************** 전역 변수 *******************/
+    let history = useHistory();
     const [form] = Form.useForm(); 
     let room_name = location.state.room_name;
     let price = location.state.price;
@@ -175,8 +177,7 @@ function Reservationinfo({location}) {
     /* POST 예약신청하기 */ 
     function applyReservation() {
         alert("예약 신청!");
-        console.log(country);
-        console.log(country[0]);
+
         // post 데이터
         const data = {
           room_ID : room_ID,
@@ -197,8 +198,6 @@ function Reservationinfo({location}) {
             data.NA_foods = NA_foods;
         }
         console.log(data);
-        console.log(typeof(data.payment));
-
 
         // axios POST 요청
         axios.post("http://localhost:8080/reservation"
@@ -210,6 +209,7 @@ function Reservationinfo({location}) {
         .then(function (response) {
           console.log(response);
           alert("정상 통신");
+          history.push('/reservation');
         })
         .catch(function (error) {
           console.log(error);
