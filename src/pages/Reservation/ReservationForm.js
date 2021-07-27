@@ -116,7 +116,8 @@ function Reservationinfo({location}) {
     /* POST */ let [ stayPurpose, setStayPurpose ] = useState('');
     /* POST */ let [ numOfGuests, setNumOfGuests ] = useState(1);
     /* POST */ let [ message, setMessage ] = useState('');
-        
+    /* POST */ let [ orUpdate, setOrUpdate ] = useState(true); // 사용자 인적사항 Update여부 - 기본값 Update하기    
+
     /* POST 조건부 */ let [ firstname, setFirstname ] = useState('');
     /* POST 조건부 */ let [ lastname, setLastname ] = useState('');
     /* POST 조건부 */ let [ sex, setSex ] = useState('');
@@ -126,6 +127,7 @@ function Reservationinfo({location}) {
 
     let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
     let [ userInfoYN, setUserInfoYN ] = useState(false);
+    
     
     /************** useState [끝] **************/ 
 
@@ -146,6 +148,7 @@ function Reservationinfo({location}) {
               setNA_foods(data.NA_foods);
               setAgeGroup(data.age_group);
               setUserInfoYN(true);
+              setOrUpdate(false); // 기존 인적사항 값이 존재하니 Update 미실시
           }
           setIsLoading(false); // axios 통신 완료되면 화면전환되게끔 제어
       })
@@ -180,6 +183,7 @@ function Reservationinfo({location}) {
 
         // post 데이터
         const data = {
+          orUpdate : orUpdate,
           room_ID : room_ID,
           check_in : check_in,
           check_out : check_out,
