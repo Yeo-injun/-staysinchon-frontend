@@ -1,0 +1,19 @@
+
+
+/* Reservation.js */
+.contents {
+    align-items: center;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 1%;
+}
+
+.title {
+    text-align: center;
+}
+
+.item {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding: 0;
+}
