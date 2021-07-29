@@ -3,7 +3,12 @@ import React, { useState, useEffect } from 'react'
 
 function MyPage() {
     /************** useState *******************/ 
-    let [ data, setData ] = useState(''); // 임시용
+    // .map() 메소드는 Arrays형태만 사용가능
+    // 그렇기 때문에 .map()을 통해 화면에 데이터를 뿌려주기 위해서는
+    // useState의 초기값을 배열로 선언해주어야 오류가 안뜸
+    // 왜냐하면 react는 HTML 요소들이 return되고, useEffect가 실행되기 때문에.
+    // 즉, HTML요소들이 먼저 출력되고 axios통신으로 데이터를 받아온다.
+    let [ myReservationList , setMyReservationList ] = useState([]); 
     /************** useState [끝] *******************/ 
 
     
@@ -21,24 +26,26 @@ function MyPage() {
                 'Authorization': localStorage.getItem("authToken") 
               }
         })
-        .then(function(response) {
-            setData(response.data);
-            console.log(data);
+        .then((response) => {
+            let myData = response.data;
+            setMyReservationList(myData);
         })
+        .catch(()=>{ '요청실패시실행할코드' })
     }
+    
     return (
         <div>
             마이페이지여~!
-            {/* {data.map(
-                (obj) => {
+            {myReservationList.map(
+                (reservation) => {
 
                     return (
                         <>
-                            {obj}
+                            {reservation.res_ID}
                         </>
                     
                 )}
-            )} */}
+            )}
         </div>
 
     );
