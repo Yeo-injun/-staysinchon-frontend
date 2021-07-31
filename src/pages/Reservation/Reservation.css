@@ -47,3 +47,7 @@
     background: whitesmoke;
     border-radius: 5px;
 }
+
+.currentState {
+    background: rgb(78, 106, 233);
+}

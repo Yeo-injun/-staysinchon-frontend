@@ -41,7 +41,7 @@ function MyPage() {
     function dateFormater(date) {
         let dateFormat = new Date(date);
         let yyyy = dateFormat.getFullYear();
-        let mm = dateFormat.getMonth();
+        let mm = dateFormat.getMonth()+1;
         let dd = dateFormat.getDate();
 
         let result = yyyy+'-'+mm+'-'+dd;
@@ -74,7 +74,7 @@ function MyPage() {
                             <div> Message : {res.message} </div>
                             <div> Payment : {res.payment} </div>
                          
-                            <ReservationState state={res.state} checkIn={res.check_in} checkOut={res.check_out}/>
+                            <ReservationState state={res.state} checkIn={res.check_in} checkOut={res.check_out} dateFormater={dateFormater}/>
                         </div>
 
                 )}
