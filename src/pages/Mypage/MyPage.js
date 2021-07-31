@@ -49,7 +49,6 @@ function MyPage() {
 
     }
 
-    // 예약 상태 반환 함수 (예약신청 : 1 / 예약확정 : 2 - / 예약취소 : 3)
 
     return (
         <div className="contents">
@@ -75,7 +74,7 @@ function MyPage() {
                             <div> Message : {res.message} </div>
                             <div> Payment : {res.payment} </div>
                          
-                            <ReservationState state={res.state}/>
+                            <ReservationState state={res.state} checkIn={res.check_in} checkOut={res.check_out}/>
                         </div>
 
                 )}

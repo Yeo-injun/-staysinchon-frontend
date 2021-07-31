@@ -35,3 +35,15 @@
     margin-bottom: 10px;
     padding: 0;
 }
+
+.stateItem {
+    margin-top: 20px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    padding: 0;
+
+    width: 80px;
+
+    background: whitesmoke;
+    border-radius: 5px;
+}
