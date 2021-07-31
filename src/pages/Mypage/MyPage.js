@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 
 import { Button } from '../../globalStyles';
 
+import ReservationState from '../Reservation/ReservationState';
+
 function MyPage() {
     /************** useState *******************/ 
     // .map() 메소드는 Arrays형태만 사용가능
@@ -47,6 +49,8 @@ function MyPage() {
 
     }
 
+    // 예약 상태 반환 함수 (예약신청 : 1 / 예약확정 : 2 - / 예약취소 : 3)
+
     return (
         <div className="contents">
             <h2>My Profile</h2>
@@ -70,13 +74,8 @@ function MyPage() {
                             <div> Purpose for stay : {res.stay_purpose} </div>
                             <div> Message : {res.message} </div>
                             <div> Payment : {res.payment} </div>
-                            
-                            <div>
-                                {res.state} State 값에 따라서 상태 출력(예약신청 - 예약확정 - 예약취소 - 숙박중 - 숙박완료) 
-                                State값에 따라 버튼 3개 만들기
-                                위 사항들을 하나의 자식 컴포넌트로 만들어 주기 : res.State값을 props로 넘겨줌
-                            </div>    
-
+                         
+                            <ReservationState state={res.state}/>
                         </div>
 
                 )}
