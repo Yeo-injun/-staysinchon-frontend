@@ -50,9 +50,10 @@
 
 .currentState {
     background: rgb(78, 106, 233);
+    color: white;
 }
 
-.btnUpdate {
+.btn {
     margin-top: 20px;
     margin-right: 10px;
     margin-bottom: 15px;
@@ -63,13 +64,6 @@
     float: right;
 }
 
-.btnCancel {
-    margin-top: 20px;
-    margin-right: 10px;
-    margin-bottom: 15px;
-    padding: 0;
-
-    width: 100px;
-
-    float: right;
+.disabled {
+    background: rgb(204, 203, 203) !important;
 }

@@ -11,6 +11,7 @@ function ReservationState(props) {
     
 
     let [curState, setCurState] = useState('');
+    let [isDisableBtn, setIsDisableBtn] = useState(true);
 
     useState(()=>{
         setCurState(checkState(props.state, props.checkIn, props.checkOut));
@@ -35,6 +36,7 @@ function ReservationState(props) {
 
         // 예약 신청 상태
         if(state == 1) {
+            setIsDisableBtn(false);
             return 'apply';
         } 
 
@@ -55,6 +57,7 @@ function ReservationState(props) {
 
         // 체크인 이전 : 예약확정
         if(now < checkInDate) {
+            setIsDisableBtn(false);
             return 'confirm';
         }
 
@@ -70,6 +73,10 @@ function ReservationState(props) {
         return uniType;
     }
 
+    function cancelReservation() {
+        alert("경고창!");
+    }
+
     return (
         <div>
             <button className={(curState == 'apply') ? "stateItem currentState" : "stateItem"}>예약신청</button>
@@ -78,12 +85,16 @@ function ReservationState(props) {
             <button className={(curState == 'stayStart') ? "stateItem currentState" : "stateItem"}>숙박중</button>
             <button className={(curState == 'stayEnd') ? "stateItem currentState" : "stateItem"}>숙박종료</button>          
             
-            {/* 숙박종료, 예약취소 상태면 비활성화 */}
-            <Button className="btnCancel">
+            {/* 숙박종료, 예약취소, 숙박중 상태면 비활성화 */}
+            <Button className={(curState == 'apply' || curState == 'confirm') ? "btn" : "btn disabled"}
+                    onClick={cancelReservation}
+                    disabled={isDisableBtn}>
                 Cancel
             </Button> 
             {/* 숙박종료, 예약취소, 숙박중 상태면 비활성화 */}
-            <Button className="btnUpdate">
+            <Button className={(curState == 'apply' || curState == 'confirm') ? "btn" : "btn disabled"}
+                    onClick={cancelReservation}
+                    disabled={isDisableBtn}>
                 Update
             </Button>
        
