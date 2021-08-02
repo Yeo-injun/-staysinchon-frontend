@@ -9,12 +9,40 @@ import { Form, Input, InputNumber, Button, Cascader, Radio} from 'antd';
 import axios from 'axios';
 
 
-function ReservationCancel(){
+function ReservationCancel(props){
+    let res_ID = props.res_ID;
+    let [ content, setContent ] = useState('');
+
+    function callCancelReservation(){
+        axios.put(
+              "http://localhost:8080/reservation/cancel"
+            , { 
+                  res_ID : res_ID
+                , content : content
+              }
+            , { headers : { 
+                            'Authorization': localStorage.getItem("authToken") 
+                          }
+              }
+        ).then((response)=>{
+            console.log(response);
+        })
+    } // callCancelReservation()
 
 
     return(
         <div>
-            취소 모달!!
+            <div><h3>Before Cancel, Check your Reservation Info. </h3></div>
+            <div> Check In : {props.checkIn}</div>
+            <div> Check Out : {props.checkOut}</div>
+
+            <textarea 
+                onChange={(e)=>{setContent(e.target.value)}}
+                placeholder="Please let me know Why you cancel reservation?"/>
+            
+            <Button className="btnCancel" onClick={callCancelReservation}>
+                Cancel Now!
+            </Button>
         </div>
     )
 }

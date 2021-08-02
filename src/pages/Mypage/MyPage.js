@@ -74,7 +74,12 @@ function MyPage() {
                             <div> Message : {res.message} </div>
                             <div> Payment : {res.payment} </div>
                          
-                            <ReservationState state={res.state} checkIn={res.check_in} checkOut={res.check_out} dateFormater={dateFormater}/>
+                            <ReservationState   res_ID={res.res_ID}
+                                                state={res.state}
+                                                // room_name 추가하기... 
+                                                checkIn={res.check_in} 
+                                                checkOut={res.check_out} 
+                                                dateFormater={dateFormater}/>
                         </div>
 
                 )}

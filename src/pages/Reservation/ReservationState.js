@@ -26,7 +26,7 @@ function ReservationState(props) {
     /************** useEffect 영역 ************************/ 
     useState(()=>{
         setCurState(checkState(props.state, props.checkIn, props.checkOut));
-    });
+    }, [props.state]);
     /************** useEffect 영역 [끝] *******************/ 
 
     const handleClick = () => setClick(!click);  // 기본값이 false
@@ -117,7 +117,7 @@ function ReservationState(props) {
             <button className={(curState == 'cancel') ? "stateItem currentState" : "stateItem"}>예약취소</button>
             <button className={(curState == 'stayStart') ? "stateItem currentState" : "stateItem"}>숙박중</button>
             <button className={(curState == 'stayEnd') ? "stateItem currentState" : "stateItem"}>숙박종료</button>          
-            
+
             {/* 숙박종료, 예약취소, 숙박중 상태면 비활성화 */}
             <Button className={(curState == 'apply' || curState == 'confirm') ? "btn" : "btn disabled"}
                     onClick={cancelReservation}
@@ -142,7 +142,10 @@ function ReservationState(props) {
                 {/* cancel 또는 update에 따라 다른 태그 보여주기 */}
                 {(isUpdate) 
                     ? <UpdateModal/> 
-                    : <CancelModal/>} 
+                    : <CancelModal 
+                        res_ID = {props.res_ID}
+                        checkIn = {props.checkIn}
+                        checkOut = {props.checkOut}/>} 
             </Modal>
 
         </div>

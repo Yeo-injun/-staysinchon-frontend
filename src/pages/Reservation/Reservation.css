@@ -67,3 +67,13 @@
 .disabled {
     background: rgb(204, 203, 203) !important;
 }
+
+textarea {
+    resize: none;
+    width: 95%;
+    height: 30%;
+}
+
+.btnCancel {
+    float: right;
+}
