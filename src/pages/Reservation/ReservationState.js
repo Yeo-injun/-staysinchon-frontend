@@ -77,6 +77,16 @@ function ReservationState(props) {
             <button className={(curState == 'cancel') ? "stateItem currentState" : "stateItem"}>예약취소</button>
             <button className={(curState == 'stayStart') ? "stateItem currentState" : "stateItem"}>숙박중</button>
             <button className={(curState == 'stayEnd') ? "stateItem currentState" : "stateItem"}>숙박종료</button>          
+            
+            {/* 숙박종료, 예약취소 상태면 비활성화 */}
+            <Button className="btnCancel">
+                Cancel
+            </Button> 
+            {/* 숙박종료, 예약취소, 숙박중 상태면 비활성화 */}
+            <Button className="btnUpdate">
+                Update
+            </Button>
+       
         </div>
     );
 }
