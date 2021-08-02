@@ -26,6 +26,7 @@ function ReservationCancel(props){
               }
         ).then((response)=>{
             console.log(response);
+            props.setIsModalVisible(false);
         })
     } // callCancelReservation()
 

@@ -145,7 +145,8 @@ function ReservationState(props) {
                     : <CancelModal 
                         res_ID = {props.res_ID}
                         checkIn = {props.checkIn}
-                        checkOut = {props.checkOut}/>} 
+                        checkOut = {props.checkOut}
+                        setIsModalVisible={setIsModalVisible}/>} 
             </Modal>
 
         </div>
