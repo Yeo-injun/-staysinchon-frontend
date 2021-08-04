@@ -79,7 +79,12 @@ function MyPage() {
                                                 // room_name 추가하기... 
                                                 checkIn={res.check_in} 
                                                 checkOut={res.check_out} 
-                                                dateFormater={dateFormater}/>
+                                                dateFormater={dateFormater}
+                                                // ReservationUpdate.js 모달창에서 사용할 데이터
+                                                numOfGuests={res.num_of_guests}
+                                                stayPurpose={res.stay_purpose}
+                                                message={res.message}
+                                                />
                         </div>
 
                 )}

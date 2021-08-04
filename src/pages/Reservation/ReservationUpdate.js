@@ -15,7 +15,7 @@ function ReservationUpdate(props){
     /************** useState *******************/ 
     let [ numOfGuests, setNumOfGuests ] = useState('');
     let [ stayPurpose, setStayPurpose ] = useState('');
-    let [ message, setMessage ] = useState('dd123');
+    let [ message, setMessage ] = useState('');
     
     /************** useEffect ************************/ 
     // 동기 처리를 통한 초기값 설정 
@@ -28,6 +28,26 @@ function ReservationUpdate(props){
         setStayPurpose(props.stayPurpose);
         setMessage(props.message);
     }
+
+    function callUpdateReservation(){
+        axios.put(
+              "http://localhost:8080/reservation"
+            , { 
+                  res_ID : props.res_ID
+                , stay_purpose : stayPurpose
+                , num_of_guests : numOfGuests
+                , message : message
+              }
+            , { headers : { 
+                            'Authorization': localStorage.getItem("authToken") 
+                          }
+              }
+        ).then((response)=>{
+            console.log(response);
+            props.setIsModalVisible(false);
+        })
+    } // callUpdateReservation()
+
     return(
         <div>
             <h3>You can update only info that include number of guests, purpose of Stay, Message.</h3>
@@ -48,7 +68,7 @@ function ReservationUpdate(props){
                       onChange = {(num) => {setNumOfGuests(num)}} /> <e> Maximum for staying is 4.</e>
                 </Form.Item>
 
-                {/* 숙박목적 */}
+                {/* 숙박목적 update */}
                 <Form.Item
                     name="stayPurpose"
                     label="Purpose of Stay"
@@ -74,6 +94,9 @@ function ReservationUpdate(props){
                         onChange = {(e) => {setMessage(e.target.value)}} />
                 </Form.Item>
             </Form>
+            <Button className="btnCancel" onClick={callUpdateReservation}>
+                Update Now!
+            </Button>
         </div>
     )
 }

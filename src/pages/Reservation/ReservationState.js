@@ -141,7 +141,12 @@ function ReservationState(props) {
                 footer={null}>
                 {/* cancel 또는 update에 따라 다른 태그 보여주기 */}
                 {(isUpdate) 
-                    ? <UpdateModal/> 
+                    ? <UpdateModal
+                        res_ID = {props.res_ID}
+                        numOfGuests={props.numOfGuests}
+                        stayPurpose={props.stayPurpose}
+                        message={props.message}
+                        setIsModalVisible={setIsModalVisible}/> 
                     : <CancelModal 
                         res_ID = {props.res_ID}
                         checkIn = {props.checkIn}
