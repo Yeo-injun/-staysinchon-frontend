@@ -18,6 +18,7 @@ function ReservationUpdate(props){
     let [ message, setMessage ] = useState('');
     
     /************** useEffect ************************/ 
+    
     // 동기 처리를 통한 초기값 설정 
     useState(async () => {
         await setInitValue();

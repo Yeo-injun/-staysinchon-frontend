@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../globalStyles';
 
 import ReservationState from '../Reservation/ReservationState';
+import UserProfile from './UserProfile';
 
 function MyPage() {
     /************** useState *******************/ 
@@ -52,9 +53,8 @@ function MyPage() {
 
     return (
         <div className="contents">
-            <h2>My Profile</h2>
-
-            <h3>-----------------------------</h3>
+            <UserProfile/>
+            
             <h2>My Reservations</h2>
             your total reservation : {myReservationList.length}
 

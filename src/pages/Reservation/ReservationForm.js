@@ -128,7 +128,6 @@ function Reservationinfo({location}) {
     let [ isLoading, setIsLoading ] = useState(true); // 본문 렌더링 전에 axios호출해서 UserInfo를 set할 수 있게끔 제어 
     let [ userInfoYN, setUserInfoYN ] = useState(false);
     
-    
     /************** useState [끝] **************/ 
 
     function getUserInfo(){
