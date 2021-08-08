@@ -12,6 +12,7 @@ function UserProfile() {
     const [button, setButton] = useState(true);
     let [ isModalVisible, setIsModalVisible ] = useState(false);
 
+    let [ checkResult, setCheckResult ] = useState(false);
     let [ userProfile, setUserProfile ] = useState('');
     /*[END] useState영역 ******/ 
 
@@ -26,8 +27,16 @@ function UserProfile() {
     /* Modal창 조작 함수 */
     const handleClick = () => setClick(!click);  // 기본값이 false
 
-    const showModal = () => {
-        setIsModalVisible(true);
+    const showModal = async () => {
+        let password = prompt("Please input your password for updating your profile");
+        let isCorrect = await checkPassword(password); // 동기 처리 
+        console.log("API결과", isCorrect);
+
+        if (isCorrect) {        
+            setIsModalVisible(true);
+        } else {
+            alert("Check your password");
+        }
     };
 
     const closeModal = () => {
@@ -43,7 +52,7 @@ function UserProfile() {
     };
     /* [END] Modal창 조작 함수 */
 
-    /* UserProfile API */
+    /* UserProfile GET API */
     function getUserProfile() {
         axios.get(
             "http://localhost:8080/user/profile"
@@ -57,6 +66,29 @@ function UserProfile() {
         })
     }
 
+    /* 수정전 비밀번호 확인 */
+    async function checkPassword(password) {
+        let result;
+        console.log("API호출", result);
+
+        // 비밀번호 검증하기
+        await axios.post(
+            "http://localhost:3000/user/profile/check"
+            , {
+                "pwd" : password
+              }
+            , { headers : { 
+                            'Authorization': localStorage.getItem("authToken") 
+                            }
+               }
+        ).then((response)=>{
+            console.log(response);
+            result = response.data;
+        })
+        console.log("API종료", result);
+        return result;
+
+    }
 
     return (
         <div>
