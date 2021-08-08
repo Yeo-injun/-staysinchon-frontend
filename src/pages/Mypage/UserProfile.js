@@ -27,6 +27,7 @@ function UserProfile() {
     /* Modal창 조작 함수 */
     const handleClick = () => setClick(!click);  // 기본값이 false
 
+    /* 프로필 업데이트 버튼 클릭시 비밀번호 확인 */
     const showModal = async () => {
         let password = prompt("Please input your password for updating your profile");
         let isCorrect = await checkPassword(password); // 동기 처리 

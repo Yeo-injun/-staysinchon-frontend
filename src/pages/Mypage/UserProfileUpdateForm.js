@@ -19,26 +19,29 @@ function UserProfileUpdateForm(props) {
 
     /* UserProfile 수정하기 */
     function updateUserProfile() {
-        
-        axios.put(
-              "http://localhost:8080/user/profile"
-              , {
-                      "firstname" : firstname
-                    , "lastname" : lastname
-                    , "sex" : sex
-                    , "country" : country
-                    , "age_group" : ageGroup
-                    , "NA_foods" : NA_foods
-                }
-              , { headers : { 
-                            'Authorization': localStorage.getItem("authToken") 
-                            }
-                }
-            ).then((response) => {
-                console.log(response);
-                alert(response.data);
-                props.closeModal(); // Modal창 종료
-            })
+        let isDone = window.confirm("Are you sure you want to update it?");
+
+        if (isDone) {
+            axios.put(
+                "http://localhost:8080/user/profile"
+                , {
+                        "firstname" : firstname
+                        , "lastname" : lastname
+                        , "sex" : sex
+                        , "country" : country
+                        , "age_group" : ageGroup
+                        , "NA_foods" : NA_foods
+                    }
+                , { headers : { 
+                                'Authorization': localStorage.getItem("authToken") 
+                                }
+                    }
+                ).then((response) => {
+                    console.log(response);
+                    alert(response.data);
+                    props.closeModal(); // Modal창 종료
+                })
+        } 
     } /* [END] updateUserProfile() */
 
     return(
