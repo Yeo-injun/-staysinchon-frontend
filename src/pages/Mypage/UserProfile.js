@@ -1,14 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { Modal } from 'antd';
+import { Button } from '../../globalStyles';
+
 
 function UserProfile() {
-    let [ userProfile, setUserProfile ] = useState('');
+    /****** useState영역 ******/ 
+    const [click, setClick] = useState(false);
+    const [button, setButton] = useState(true);
+    let [ isModalVisible, setIsModalVisible ] = useState(false);
 
+    let [ userProfile, setUserProfile ] = useState('');
+    /*[END] useState영역 ******/ 
+
+
+    /****** useEffect ******/
     useEffect(()=>{
         getUserProfile()
     }, []) 
+    /*[END] useEffect ******/
+    
 
+    /* Modal창 조작 함수 */
+    const handleClick = () => setClick(!click);  // 기본값이 false
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+    /* [END] Modal창 조작 함수 */
+
+    /* UserProfile API */
     function getUserProfile() {
         axios.get(
             "http://localhost:8080/user/profile"
@@ -22,6 +52,7 @@ function UserProfile() {
         })
     }
 
+
     return (
         <div>
             <h2>My Profile</h2>
@@ -32,6 +63,19 @@ function UserProfile() {
             <div>Country<span>{userProfile.country}</span></div>
             <div>Age Group<span>{userProfile.age_group}</span></div>
             <div>Allergy info<span>{userProfile.NA_foods}</span></div>
+        
+            <Button onClick={showModal}>Update Profile</Button>
+
+            {/* Modal창 */}
+            <Modal 
+                title="Update Profile" 
+                visible={isModalVisible} 
+                onOk={handleOk} 
+                onCancel={handleCancel}
+                footer={null}>
+                
+            </Modal>
+        
         </div>
     );
 }
