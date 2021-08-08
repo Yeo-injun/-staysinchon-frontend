@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Modal } from 'antd';
 import { Button } from '../../globalStyles';
 
+import UserProfileUpdateForm from './UserProfileUpdateForm';
 
 function UserProfile() {
     /****** useState영역 ******/ 
@@ -27,6 +28,10 @@ function UserProfile() {
 
     const showModal = () => {
         setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
     };
 
     const handleOk = () => {
@@ -73,7 +78,15 @@ function UserProfile() {
                 onOk={handleOk} 
                 onCancel={handleCancel}
                 footer={null}>
-                
+                <UserProfileUpdateForm
+                    firstname   = {userProfile.firstname}
+                    lastname    = {userProfile.lastname}
+                    sex         = {userProfile.sex}
+                    country     = {userProfile.country}
+                    age_group   = {userProfile.age_group}
+                    NA_foods    = {userProfile.NA_foods}
+                    closeModal  = {closeModal}    
+                />
             </Modal>
         
         </div>

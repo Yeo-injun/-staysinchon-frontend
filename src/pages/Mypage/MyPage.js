@@ -2,7 +2,7 @@ import '../common-component.css';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-import { Button } from '../../globalStyles';
+import { Form, Input, InputNumber, Button, Cascader, Radio} from 'antd';
 
 import ReservationState from '../Reservation/ReservationState';
 import UserProfile from './UserProfile';
