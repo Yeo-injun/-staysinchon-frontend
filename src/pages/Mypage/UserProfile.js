@@ -102,7 +102,7 @@ function UserProfile() {
             <div>Age Group<span>{userProfile.age_group}</span></div>
             <div>Allergy info<span>{userProfile.NA_foods}</span></div>
         
-            <Button onClick={showModal}>Update Profile</Button>
+            <Button onClick={showModal}>Profile Update</Button>
 
             {/* Modal창 */}
             <Modal 

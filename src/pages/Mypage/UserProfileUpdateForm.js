@@ -77,7 +77,7 @@ function UserProfileUpdateForm(props) {
                 >
                     <Input
                         defaultValue = {lastname}
-                        onChange={(e)=>{ setFirstname(e.target.value) }}
+                        onChange={(e)=>{ setLastname(e.target.value) }}
                     />
                 </Form.Item>
 
