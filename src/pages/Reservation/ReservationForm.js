@@ -180,25 +180,28 @@ function Reservationinfo({location}) {
     function applyReservation() {
         alert("예약 신청!");
 
-        // post 데이터
+        // post 데이터 : DTO로 받고, DTO는 Entity로 구분되어 DB에 저장된다.
         const data = {
           orUpdate : orUpdate,
-          room_ID : room_ID,
-          check_in : check_in,
-          check_out : check_out,
-          stay_purpose : stayPurpose,
-          num_of_guests : numOfGuests,
-          payment : payment(),
-          message : message          
+          reservationInfoEntity : {
+            roomId : room_ID,
+            checkIn : check_in,
+            checkOut : check_out,
+            stayPurpose : stayPurpose,
+            numOfGuests : numOfGuests,
+            payment : payment(),
+            message : message 
+          },
+          userEntity : {}         
         };
 
         if (!userInfoYN) {
-            data.firstname = firstname;
-            data.lastname = lastname;
-            data.sex = parseInt(sex);
-            data.country = country[0];
-            data.age_group = ageGroup[0];
-            data.NA_foods = NA_foods;
+            data.userEntity.firstname = firstname;
+            data.userEntity.lastname = lastname;
+            data.userEntity.sex = parseInt(sex);
+            data.userEntity.country = country[0];
+            data.userEntity.ageGroup = ageGroup[0];
+            data.userEntity.NaFoods = NA_foods;
         }
         console.log(data);
 
