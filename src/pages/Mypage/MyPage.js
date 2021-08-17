@@ -64,25 +64,25 @@ function MyPage() {
                     return (
                         <div className="item">
                             Image -- 사진 추가하기...!
-                            <div>{res.res_date}</div>
-                            <div> Reservation ID : {res.res_ID} </div>
-                            <div> Room Name : {res.room_ID} Room Name으로 바꾸기</div> 
-                            <div> Check in : {dateFormater(res.check_in)} </div> 
-                            <div> Check out : {dateFormater(res.check_out)} </div>
-                            <div> Guests : {res.num_of_guests} </div>
-                            <div> Purpose for stay : {res.stay_purpose} </div>
+                            <div>{res.resDate}</div>
+                            <div> Reservation ID : {res.resId} </div>
+                            <div> Room Name : {res.roomName} </div> 
+                            <div> Check in : {dateFormater(res.checkIn)} </div> 
+                            <div> Check out : {dateFormater(res.checkOut)} </div>
+                            <div> Guests : {res.numOfGuests} </div>
+                            <div> Purpose for stay : {res.stayPurpose} </div>
                             <div> Message : {res.message} </div>
                             <div> Payment : {res.payment} </div>
                          
-                            <ReservationState   res_ID={res.res_ID}
+                            <ReservationState   res_ID={res.resId}
                                                 state={res.state}
                                                 // room_name 추가하기... 
-                                                checkIn={res.check_in} 
-                                                checkOut={res.check_out} 
+                                                checkIn={res.checkIn} 
+                                                checkOut={res.checkOut} 
                                                 dateFormater={dateFormater}
                                                 // ReservationUpdate.js 모달창에서 사용할 데이터
-                                                numOfGuests={res.num_of_guests}
-                                                stayPurpose={res.stay_purpose}
+                                                numOfGuests={res.numOfGuests}
+                                                stayPurpose={res.stayPurpose}
                                                 message={res.message}
                                                 />
                         </div>
