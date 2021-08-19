@@ -185,6 +185,7 @@ function Reservationinfo({location}) {
           orUpdate : orUpdate,
           reservationInfoEntity : {
             roomId : room_ID,
+            roomName : room_name,
             checkIn : check_in,
             checkOut : check_out,
             stayPurpose : stayPurpose,

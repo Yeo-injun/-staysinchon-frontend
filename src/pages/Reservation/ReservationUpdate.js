@@ -34,9 +34,9 @@ function ReservationUpdate(props){
         axios.put(
               "http://localhost:8080/reservation"
             , { 
-                  res_ID : props.res_ID
-                , stay_purpose : stayPurpose
-                , num_of_guests : numOfGuests
+                  resId : props.res_ID
+                , stayPurpose : stayPurpose
+                , numOfGuests : numOfGuests
                 , message : message
               }
             , { headers : { 

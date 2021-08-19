@@ -187,6 +187,7 @@ function Reservation() {
                                                     check_out : searchCond[1],
                                                     room_name : room.room_name,
                                                     room_ID : room.room_ID,
+                                                    room_name : room.room_name,
                                                     price : room.price_day
                                                 }
                                             }} 
