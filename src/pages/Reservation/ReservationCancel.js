@@ -10,14 +10,14 @@ import axios from 'axios';
 
 
 function ReservationCancel(props){
-    let res_ID = props.res_ID;
+    let resId = props.res_ID;
     let [ content, setContent ] = useState('');
 
     function callCancelReservation(){
         axios.put(
               "http://localhost:8080/reservation/cancel"
             , { 
-                  res_ID : res_ID
+                  resId : resId
                 , content : content
               }
             , { headers : { 
