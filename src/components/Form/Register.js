@@ -19,7 +19,7 @@ import { PinDropSharp } from '@material-ui/icons';
 function Register(props) {
 
     /************** useState영역 *******************/ 
-    let [ user_ID, setUserName ] = useState(null); // 사용자 ID
+    let [ userId, setUserName ] = useState(null); // 사용자 ID
     let [ pwd, setPassword ] = useState(null); // 사용자 PW
     let [ checkPwd, setCheckPassword ] = useState(null); // 사용자 PW 확인
     let [ email, setEmail ] = useState(null); // 사용자 email
@@ -36,29 +36,27 @@ function Register(props) {
 
 
     /* 아이디 중복 확인 */
-    function idCheck() {
-        console.log("아이디 중복 POST시작");
+    function checkDuplicationForUserId() {
+        
+        if (userId == null) {
+            alert("Please typing username")
+            return;
+        }
+
         // axios POST 요청         
         axios.post
             ( "http://localhost:8080/user/check"
-            , { user_ID : user_ID }
+            , { userId : userId }
             )
             .then(function (response) {
-                let res = response.data; 
-                console.log(res);
-                if(res === 'false') { // 중복된 ID가 없으면 false
-                    console.log("ID 체크 false");
-                    return false;
-                }
-
-                if(res === 'true') { // 중복된 ID가 있으면 true
-                    console.log("ID 체크 true");
-                    return true;
-                }
+                setIsDuplicate(false);
+                alert("You can use this ID.");
             })
             .catch(function (error) {
+                console.log(error);
+                setIsDuplicate(true);
+                alert("아이디 중복됐습니다!");
             }); // axios [끝]
-        console.log("아이디 중복 IF문 시작");
     }
     
     
@@ -72,7 +70,7 @@ function Register(props) {
 
     /* 입력값 유효성 확인 */
     function validationCheck() {
-        if (user_ID === null || user_ID === '') {
+        if (userId === null || userId === '') {
             return false;
         }
         if (pwd === null || pwd === '') {
@@ -93,8 +91,8 @@ function Register(props) {
         }
 
         // 아이디 중복 Check : true면 아이디 중복이 있다는 것
-        if (idCheck()){
-            alert("이미 존재하는 아이디 입니다.");
+        if (isDuplicate){
+            alert("Check your ID Whether duplicate or not");
             inputRef.current.focus();
             return;
         };
@@ -104,7 +102,7 @@ function Register(props) {
             axios.post
                 ( "http://localhost:8080/user/register"
                 , {
-                    user_ID : user_ID,
+                    userId : userId,
                     pwd : pwd,
                     email : email
                   })
@@ -147,7 +145,11 @@ function Register(props) {
                     ref = {inputRef}
                     prefix={<UserOutlined className="site-form-item-icon" />} 
                     placeholder="Username" 
-                    onChange={(e)=>{ setUserName(e.target.value) }} />
+                    onChange={(e)=>{ setUserName(e.target.value); setIsDuplicate(true); }} /> {/* 입력 ID가 바뀌면 다시 중복체크를 하게끔 제어 */}
+
+                    <Button onClick={ checkDuplicationForUserId } htmlType="submit" className="login-form-button">
+                        Check your ID!
+                    </Button>
                 </Form.Item>
 
                 {/* 패스워드 입력창 */ }
