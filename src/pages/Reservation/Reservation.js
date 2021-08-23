@@ -60,9 +60,8 @@ function Reservation() {
     /* 방 목록 기본값 호출 */
     function getRoomList() {
         axios.get('http://localhost:8080/rooms')
-            .then((result)=>{ 
-                var rs = result.data;                
-                setRoomData(rs);                     
+            .then((result)=>{                
+                setRoomData(result.data);                     
             })
             .catch(()=>{ '요청실패시실행할코드' })
     }
@@ -74,8 +73,7 @@ function Reservation() {
         axios.get('http://localhost:8080/rooms/search?check_in=' + searchCond[0] +'&check_out='+ searchCond[1])
              .then((result)=>{
                  setSearchState(true);
-                 var rs = result.data;
-                 setRoomData(rs);
+                 setRoomData(result.data);
              })
              .catch(()=>{ '요청실패시실행할코드' })
 
@@ -150,15 +148,15 @@ function Reservation() {
                     return (
                     <div className="roomItem">
                         <img src=""/>
-                        <span><h3>{room.room_name}</h3></span>
-                        <p>Room Type : { room.room_type }</p>
+                        <span><h3>{room.roomName}</h3></span>
+                        <p>Room Type : { room.roomType }</p>
                         <p>Accommodate : { room.capacity }</p>
                         <p>Beds : { room.bed }</p>
                         <p>Bathroom : { room.bathroom }</p>
 
                         <div className="priceContent">
-                            <li>Daily Price : { room.price_day }</li>
-                            <li>Monthly Price : { room.price_month }</li>
+                            <li>Daily Price : { room.priceDay }</li>
+                            <li>Monthly Price : { room.priceMonth }</li>
                         </div>
 
                         {/* 화면 전환은 Link태그 활용 : 로그인시에만 화면 전환되도록 구현해야함...*/}
@@ -185,10 +183,10 @@ function Reservation() {
                                                 state : {
                                                     check_in : searchCond[0],
                                                     check_out : searchCond[1],
-                                                    room_name : room.room_name,
-                                                    room_ID : room.room_ID,
-                                                    room_name : room.room_name,
-                                                    price : room.price_day
+                                                    room_name : room.roomName,
+                                                    room_ID : room.roomId,
+                                                    room_name : room.roomName,
+                                                    price : room.priceDay
                                                 }
                                             }} 
                                         >

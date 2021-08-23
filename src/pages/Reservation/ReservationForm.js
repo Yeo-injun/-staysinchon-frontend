@@ -108,8 +108,8 @@ function Reservationinfo({location}) {
                 };
     /************** 전역 변수 [끝] *******************/
 
+
     /************** useState *******************/ 
-    
     /* POST */ let room_ID = location.state.room_ID;
     /* POST */ let check_in = location.state.check_in;
     /* POST */ let check_out = location.state.check_out;
@@ -137,15 +137,17 @@ function Reservationinfo({location}) {
                             }
               })
       .then(function (response) {
-          let data = response.data;
-          if(data.userInfo){
+          let result = response.data;
+          let data = result.userEntity;
+          
+          if(result.userInfoYn){
               console.log("예약이력 존재");
               setFirstname(data.firstname);
               setLastname(data.lastname);
               setSex(data.sex);
               setCountry(data.country);
-              setNA_foods(data.NA_foods);
-              setAgeGroup(data.age_group);
+              setNA_foods(data.NaFoods);
+              setAgeGroup(data.ageGroup);
               setUserInfoYN(true);
               setOrUpdate(false); // 기존 인적사항 값이 존재하니 Update 미실시
           }
