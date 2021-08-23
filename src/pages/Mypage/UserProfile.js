@@ -85,7 +85,7 @@ function UserProfile() {
         ).then((response)=>{
             console.log(response);
             result = response.data;
-        })
+        }).catch(()=>{alert("서버 오류가 발생했습니다.");})
         console.log("API종료", result);
         return result;
 
@@ -99,8 +99,8 @@ function UserProfile() {
             <div>Last name<span>{userProfile.lastname}</span></div>
             <div>Gender<span>{userProfile.sex}</span></div>
             <div>Country<span>{userProfile.country}</span></div>
-            <div>Age Group<span>{userProfile.age_group}</span></div>
-            <div>Allergy info<span>{userProfile.NA_foods}</span></div>
+            <div>Age Group<span>{userProfile.ageGroup}</span></div>
+            <div>Allergy info<span>{userProfile.NaFoods}</span></div>
         
             <Button onClick={showModal}>Profile Update</Button>
 
@@ -116,8 +116,8 @@ function UserProfile() {
                     lastname    = {userProfile.lastname}
                     sex         = {userProfile.sex}
                     country     = {userProfile.country}
-                    age_group   = {userProfile.age_group}
-                    NA_foods    = {userProfile.NA_foods}
+                    age_group   = {userProfile.ageGroup}
+                    NA_foods    = {userProfile.NaFoods}
                     closeModal  = {closeModal}    
                 />
             </Modal>
